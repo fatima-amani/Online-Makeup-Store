@@ -1,0 +1,24 @@
+.product-conatiner .product_box{
+    width: 100%;
+    background-color: #ffffff;
+    height: auto;
+    border: 1px solid #7d7d7c;
+    padding: 20px 0px 0px 0px;
+    margin-top: 30px;
+    overflow:hidden;
+    cursor: pointer;
+    display: none;
+}
+
+
+/* .product_box:nth-child(1),
+.product_box:nth-child(2),
+.product_box:nth-child(3),
+.product_box:nth-child(4),
+.product_box:nth-child(5),
+.product_box:nth-child(6),
+.product_box:nth-child(7),
+.product_box:nth-child(8){
+
+    display:inline-block;
+} */
