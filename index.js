@@ -60,9 +60,7 @@ app.get("/products",(req,res) => {
 //  https://www.youtube.com/watch?v=Ud5xKCYQTjM&ab_channel=WebDevSimplified
 //  https://www.youtube.com/watch?v=jI4K7L-LI58&ab_channel=WebDevSimplified
 
-app.get("/aa",(req, res) => {
-    res.render("contact.ejs")
-});
+
 
 app.listen(port,()=> {
     console.log(`server listening to port ${port}`);
