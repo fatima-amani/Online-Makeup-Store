@@ -41,6 +41,10 @@ h1{
     margin-top: 20px;
  }
 
+ select:hover{
+    cursor: pointer;
+ }
+
  input{
     width: 50px;
     height: 40px;
@@ -109,6 +113,11 @@ input::after focus{
     padding: 10px 20px;
     border: none;
     border-radius: 10px;
+    cursor: pointer;
+  }
+
+  button:hover{
+    background-color: #e18a48;
     cursor: pointer;
   }
   
