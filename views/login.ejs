@@ -53,5 +53,13 @@
         </form>
         <p>Don't have an account? <a href="http://localhost:3000/signup">Sign up</a></p>
     </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const alertMessage = params.get('alert');
+        if (alertMessage) {
+            alert(decodeURIComponent(alertMessage));
+        }
+    </script>
 </body>
 </html>

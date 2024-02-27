@@ -8,10 +8,11 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json()); 
+app.use(express.json());
 
 // mysql2
 const mysql = require("mysql2");
+const { error } = require("console");
 
 const connection = mysql.createConnection({
   host: "localhost",
@@ -73,7 +74,7 @@ app.get("/signup", (req, res) => {
 });
 
 app.post("/user/signup", async (req, res) => {
-    try {
+  try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     console.log(req.body);
     console.log(hashedPassword);
@@ -83,17 +84,18 @@ app.post("/user/signup", async (req, res) => {
     let signupQuery = `INSERT INTO Users (FirstName, LastName, EmailID, Username, PasswordHash, Phone, UserRole, UserAddress) VALUES (?,?,?,?,?,?,'Customer',?)`;
     let userArray = Object.values(user);
 
-    connection.query(signupQuery,userArray, (errSignup, resultSignup) => {
+    connection.query(signupQuery, userArray, (errSignup, resultSignup) => {
       if (errSignup) {
         console.log(errSignup.sqlMessage);
-        res.redirect('/signup?alert=' + encodeURIComponent(errSignup.sqlMessage));
+        res.redirect(
+          "/signup?alert=" + encodeURIComponent(errSignup.sqlMessage)
+        );
       } else {
-        console.log(resultSignup);
-        res.send("signup sucessful");
+        res.redirect("/home");
       }
     });
-  } catch {
-    res.send("some error with sign up, try again");
+  } catch (err) {
+    res.redirect("/signup?alert=" + encodeURIComponent(err));
   }
 });
 
@@ -103,23 +105,35 @@ app.get("/login", (req, res) => {
 
 // to be fixed
 app.post("/user/login", async (req, res) => {
-  console.log(Appusers);
-  console.log(req.body);
-  let user = Appusers.find((user1) => user1.username === req.body.username);
-  if (user == null) {
-    res.send("Cannot find user");
-  } else {
-    try {
-      if (await bcrypt.compare(req.body.password, user.password)) {
-        console.log("sucesss");
-        console.log(user);
-        res.send("login successfull");
+  const username = req.body.username;
+    const password = req.body.password;
+  try {
+    queryLogin = `SELECT * FROM Users WHERE username = ? ;`;
+    connection.query(queryLogin,[username], async (errLogin, resultLogin) => {
+      if (errLogin) {
+        console.log(errLogin);
+        res.send("error with login");
       } else {
-        res.send("invalid credentials");
+        if (resultLogin.length == 0) {
+          res.redirect(
+            "/login?alert=" + encodeURIComponent("Username does not exist")
+          );
+        } else {
+          let hashedPassword = resultLogin[0].PasswordHash;
+          let isPasswordMatch = await bcrypt.compare(password, hashedPassword);
+          if (isPasswordMatch) {
+            res.send("login successfull");
+          } else {
+            res.redirect(
+              "/login?alert=" + encodeURIComponent("Incorrect Password !!")
+            );
+          }
+        }
       }
-    } catch {
-      res.send("some error in server");
-    }
+    });
+  } catch (err){
+    console.log(err);
+    res.redirect("/login");
   }
 });
 
