@@ -8,6 +8,7 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json()); 
 
 // mysql2
 const mysql = require("mysql2");
@@ -72,16 +73,27 @@ app.get("/signup", (req, res) => {
 });
 
 app.post("/user/signup", async (req, res) => {
-  try {
+    try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     console.log(req.body);
     console.log(hashedPassword);
     let user = req.body;
     user.password = hashedPassword;
-    Appusers.push(req.body);
-    res.send("received signup req");
+
+    let signupQuery = `INSERT INTO Users (FirstName, LastName, EmailID, Username, PasswordHash, Phone, UserRole, UserAddress) VALUES (?,?,?,?,?,?,'Customer',?)`;
+    let userArray = Object.values(user);
+
+    connection.query(signupQuery,userArray, (errSignup, resultSignup) => {
+      if (errSignup) {
+        console.log(errSignup.sqlMessage);
+        res.redirect('/signup?alert=' + encodeURIComponent(errSignup.sqlMessage));
+      } else {
+        console.log(resultSignup);
+        res.send("signup sucessful");
+      }
+    });
   } catch {
-    res.status(500).send();
+    res.send("some error with sign up, try again");
   }
 });
 
