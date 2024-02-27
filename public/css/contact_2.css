@@ -3,7 +3,7 @@ body {
     background-color: #f8f8f8;
     margin: 0;
     padding: 0;
-    background-image: url(images/banner-bg.png);
+    background-image: url(../images/banner-bg.png);
     background-repeat: no-repeat;
 }
 
