@@ -16,8 +16,6 @@ CREATE TABLE Products (
     ProductImage VARCHAR(255)
 );
 
-
-
 CREATE TABLE Users (
     UserID SERIAL PRIMARY KEY,
     FirstName VARCHAR(10),
@@ -51,16 +49,16 @@ CREATE TABLE Orders (
 
 CREATE TABLE OrderDetail (
     OrderDetailID SERIAL PRIMARY KEY,
-    OrderID VARCHAR(10) REFERENCES Orders(OrderID)  ON DELETE CASCADE,
-    ProductID VARCHAR(10) REFERENCES Products(ProductID)  ON DELETE CASCADE,
+    OrderID INTEGER REFERENCES Orders(OrderID)  ON DELETE CASCADE,
+    ProductID INTEGER REFERENCES Products(ProductID)  ON DELETE CASCADE,
     Quantity INT,
     Subtotal DECIMAL(10, 2)
 );
 
 CREATE TABLE  ProductReviews (
     ReviewID SERIAL PRIMARY KEY,
-    UserID VARCHAR(10) REFERENCES Users(UserID)  ON DELETE CASCADE,
-    ProductID VARCHAR(10) REFERENCES Products(ProductID)  ON DELETE CASCADE,
+    UserID INTEGER REFERENCES Users(UserID)  ON DELETE CASCADE,
+    ProductID INTEGER REFERENCES Products(ProductID)  ON DELETE CASCADE,
     Rating INT,
     ReviewComment TEXT,
     ReviewDate DATE
@@ -72,6 +70,14 @@ CREATE TABLE StoreReviews (
     EmailID VARCHAR(255) REFERENCES USERS(EMAILID),
     Content VARCHAR(500) NOT NULL
 );
+
+CREATE TABLE CART(
+	CartItemID SERIAL PRIMARY KEY,
+    UserID INTEGER REFERENCES Users(UserID)  ON DELETE CASCADE,
+    ProductID INTEGER REFERENCES Products(ProductID)  ON DELETE CASCADE,
+    Quantity INTEGER
+);
+    
 
 SHOW TABLES;
 DESC Products;
@@ -93,7 +99,7 @@ VALUES
 ('Maybelline New York Instant Age Rewind Concealer', 'Maybelline', 'Yichang Tianmi International Cosmetics Co.', 'China', 'Maybelline''s Instant Age Rewind Concealer is your multi-tasking magic wand for brighter, younger-looking eyes. This do-it-all formula, infused with goji berry and Haloxyl, not only conceals dark circles and blemishes, but also claims to visibly reduce fine lines and firm the under-eye area. Its unique micro-corrector applicator with a built-in sponge blends seamlessly, providing light to medium coverage with a radiant, crease-resistant finish. Plus, SPF 18 shields your delicate skin from sun damage. Hydrating and lightweight, this concealer is suitable for most skin types and promises up to 12 hours of wear. Get ready to rewind the years and reveal a refreshed, luminous you!', 729, 38, 'CONCEALER','makeup',"\\images\\maybellineinstantagerewindconcealor.png"),
 ('Huda Beauty Empowered Eyeshadow Palette', 'Huda Beauty', 'Huda Beauty LLC', 'Italy', 'The Huda Beauty Empowered Eyeshadow Palette is a versatile eyeshadow palette that includes 18 shades in a variety of finishes, including matte, metallic, shimmer, and gel-liner hybrid. The shades are all highly pigmented and blendable, making it easy to create a variety of eye looks. The palette also includes a mirror and two double-ended brushes.', 5900, 10, 'EYESHADOW','makeup',"\\images\\hudabeautyempoweredpallete.png");
 
-SELECT * FROM Products;
+
 
 INSERT INTO Users (FirstName, LastName, EmailID, Username, PasswordHash, Phone, UserRole, UserAddress)
 VALUES 
@@ -137,7 +143,7 @@ VALUES
 (2, 3, 1, 1299);
 
 
-INSERT INTO  ProductReviews (UserID, ProductID, Rating, ReviewComment, ReviewDate,imagePath)
+INSERT INTO  ProductReviews (UserID, ProductID, Rating, ReviewComment, ReviewDate)
 VALUES
 (5, 5, 1, '5900 IS TOO EXPENSIVE FOR AN EYESHADOW !!!!', '2024-02-20'),
 (5, 5, 1, '5900 IS TOO EXPENSIVE FOR AN EYESHADOW !!!!', '2024-02-20'),
@@ -149,10 +155,39 @@ VALUES
 ("Apeksha", "apeksha@gmail.com","Their collection! OMG they have everything you'll ever need for your skin! The customer service is good. Delivery is on time and every package comes with a personalized note with it! That's the best part for me tbh! Keep growin !!"),
 ('Alakananda','alakananda@gmail.com',"Fatima ke suggestions are the only suggestions I listen to! So ofcourse i had to try and experience the beauty of their products. I love them all! GlamSphere's products never cease to amaze mw! I love this store ");
 
+INSERT INTO Cart (UserID ,ProductID , Quantity)
+VALUES 
+(1,2,1),
+(1,3,1),
+(1,2,1),
+(2,5,1),
+(2,3,2);
+
 
 SELECT * FROM Products;
 SELECT * FROM Users;
 SELECT * FROM Shades;
 SELECT * FROM Orders;
 SELECT * FROM OrderDetail;
-SELECT * FROM  ProductReviews;
+SELECT * FROM ProductReviews;
+SELECT * FROM Cart;
+
+SELECT *
+FROM ProductReviews
+WHERE ProductID IN (
+    SELECT ProductID
+    FROM Products
+    WHERE MainCategory = 'makeup'
+);
+
+SELECT *
+FROM ProductReviews
+WHERE ProductID IN (
+    SELECT ProductID
+    FROM Products
+    WHERE MainCategory = 'skincare'
+);
+
+
+
+

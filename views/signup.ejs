@@ -8,7 +8,7 @@
     <style>
        body {
             font-family: Arial, sans-serif;
-            background-image: url(./public/images/signup_bg\ pic.png);
+            background-image: url(/images/signup_bg\ pic.png);
             background-size: cover;
             margin: 0;
             padding: 0;
@@ -28,6 +28,7 @@
         input[type="text"],
         input[type="email"],
         input[type="tel"],
+        input[type="password"],
         textarea,
         input[type="submit"] {
             width: 100%;
@@ -45,6 +46,7 @@
         input[type="submit"]:hover {
             background-color: #f3d29d;
         }
+    </style>
 </head>
 
 <body>
@@ -129,28 +131,6 @@
                         // Handle errors
                     });
             });
-
-        // function sendData(url, data) {
-        //     fetch(url, {
-        //         method: 'POST',
-        //         body: data
-        //     })
-        //         .then(response => {
-        //             if (!response.ok) {
-        //                 throw new Error('Network response was not ok');
-        //             }
-        //             return response.text();
-        //         })
-        //         .then(responseText => {
-        //             // Handle successful response
-        //             console.log(responseText);
-        //         })
-        //         .catch(error => {
-        //             // Handle errors
-        //             console.error('There was a problem with the fetch operation:', error);
-        //         });
-        // }
-
         function displayErrorMessage(message) {
             // Display error message to the user
             const errorDiv = document.createElement('div');

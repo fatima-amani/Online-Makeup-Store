@@ -30,7 +30,7 @@ app.get("/home", (req, res) => {
       console.log(errReviews);
       res.send("some error in Database");
     } else {
-      console.log(resultReviews);
+      // console.log(resultReviews);
       let queryProducts =
         "SELECT productid, pname, price, category, quantityAvailable, imagePath FROM products ORDER BY quantityAvailable DESC LIMIT 4;";
       connection.query(queryProducts, (errProducts, resultProducts) => {
@@ -62,6 +62,41 @@ app.get("/products", (req, res) => {
       res.render("products.ejs", { products: resultProducts });
     }
   });
+});
+
+app.get("/products/makeup", (req,res) => {
+  let query = "SELECT * FROM Products WHERE MainCategory = 'makeup' ;";
+  connection.query(query, (errProducts, resultProducts) => {
+    if (errProducts) {
+      console.log(errProducts);
+      res.send("Some error in fetching products from the database");
+    } else {
+      console.log(resultProducts);
+      res.render("makeup.ejs",);
+    }
+  });
+});
+
+
+app.get("/cart", (req,res) => {
+  let userid = 1;
+  let query = "SELECT c.CartItemID, c.ProductID, c.UserID, p.PName, p.Price,p.imagePath, c.quantity FROM Cart c JOIN Products p ON c.ProductID = p.ProductID WHERE c.UserID = ?;";
+  try {
+    connection.query(query,[userid], (errCart, resultCart) => {
+      if(errCart) {
+        console.log(errCart);
+        res.send("some error with database");
+      }
+      else {
+        console.log(resultCart);
+        res.render("cart.ejs", { cartItems : resultCart});
+      }
+    });
+  } catch(err) {
+    console.log(err);
+    res.redirect("/home");
+  }
+  
 });
 
 // user authentication
