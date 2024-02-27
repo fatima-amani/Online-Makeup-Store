@@ -24,13 +24,13 @@ const connection = mysql.createConnection({
 
 app.get("/home", (req, res) => {
   let queryReviews =
-    "SELECT r.UserID, r.ReviewComment, u.UserName FROM Reviews R JOIN Users u ON r.UserID = u.UserID;";
+    "SELECT r.RName, r.EmailID, r.Content, u.imagePath FROM StoreReviews r JOIN Users u ON r.EmailID = u.EmailID;";
   connection.query(queryReviews, (errReviews, resultReviews) => {
     if (errReviews) {
       console.log(errReviews);
       res.send("some error in Database");
     } else {
-      // console.log(resultReviews);
+      console.log(resultReviews);
       let queryProducts =
         "SELECT productid, pname, price, category, quantityAvailable, imagePath FROM products ORDER BY quantityAvailable DESC LIMIT 4;";
       connection.query(queryProducts, (errProducts, resultProducts) => {
@@ -144,6 +144,34 @@ app.get("/about", (req,res) => {
   res.render("about.ejs");
 });
 
+// contact us route
+
+app.get("/contact", (req,res) => {
+  res.render("contact.ejs");
+});
+
+app.get("/getintouch", (req,res) => {
+  res.render("get-in-touch.ejs");
+});
+
+app.post("/getintouch/post",(req,res) => {
+  console.log(req.body);
+  let reviewPost = req.body;
+  let query = `SELECT * FROM USERS WHERE emailid = ? ;`;
+  try {connection.query(query, [reviewPost.email],(err,results) => {
+    if(err) {
+      console.log(err);
+      res.send("Some errors happened please try again");
+    }
+    else {
+      console.log(results);
+    }
+  })} catch (err){
+    console.log(err);
+    res.redirect("/getintouch");
+  }
+  
+});
 
 
 

@@ -16,9 +16,6 @@ CREATE TABLE Products (
     ProductImage VARCHAR(255)
 );
 
-ALTER TABLE products
-ADD COLUMN imagePath VARCHAR(255);
-
 
 
 CREATE TABLE Users (
@@ -30,9 +27,12 @@ CREATE TABLE Users (
     PasswordHash VARCHAR(255),    
     Phone VARCHAR(20),
     UserRole ENUM('CUSTOMER', 'ADMIN'),
-    UserAddress VARCHAR(255)
+    UserAddress VARCHAR(255),
+    imagePath VARCHAR(255)
 );
 
+-- ADD PATH TO INSERT
+-- SET imagePath = '/images/fatima.png';
 
 
 CREATE TABLE Shades (
@@ -57,7 +57,7 @@ CREATE TABLE OrderDetail (
     Subtotal DECIMAL(10, 2)
 );
 
-CREATE TABLE Reviews (
+CREATE TABLE  ProductReviews (
     ReviewID SERIAL PRIMARY KEY,
     UserID VARCHAR(10) REFERENCES Users(UserID)  ON DELETE CASCADE,
     ProductID VARCHAR(10) REFERENCES Products(ProductID)  ON DELETE CASCADE,
@@ -66,13 +66,21 @@ CREATE TABLE Reviews (
     ReviewDate DATE
 );
 
+CREATE TABLE StoreReviews (
+	ReviewID SERIAL PRIMARY KEY,
+    RName VARCHAR(20) NOT NULL,
+    EmailID VARCHAR(255) REFERENCES USERS(EMAILID),
+    Content VARCHAR(500) NOT NULL
+);
+
 SHOW TABLES;
 DESC Products;
 DESC Users;
 DESC Shades;
 DESC Orders;
 DESC OrderDetail;
-DESC Reviews;
+DESC  ProductReviews;
+DESC StoreReviews;
 
 
 -- insert into products 
@@ -129,12 +137,17 @@ VALUES
 (2, 3, 1, 1299);
 
 
-INSERT INTO Reviews (UserID, ProductID, Rating, ReviewComment, ReviewDate,imagePath)
+INSERT INTO  ProductReviews (UserID, ProductID, Rating, ReviewComment, ReviewDate,imagePath)
 VALUES
 (5, 5, 1, '5900 IS TOO EXPENSIVE FOR AN EYESHADOW !!!!', '2024-02-20'),
 (5, 5, 1, '5900 IS TOO EXPENSIVE FOR AN EYESHADOW !!!!', '2024-02-20'),
 (1, 1, 5, 'LIPSTICK IS AMAZING !! BOMBAE IS MY FAVOURITE SHADE', '2024-02-25');
 
+INSERT INTO StoreReviews (RName, EmailID, Content)
+VALUES 
+('Aamna', 'aamna@gmail.com','Sunscreen lagani hoti hai yaar roz!and their sunscreen collection is soo soo good! they have multiple kinds of sunscreen to select from!'),
+("Apeksha", "apeksha@gmail.com","Their collection! OMG they have everything you'll ever need for your skin! The customer service is good. Delivery is on time and every package comes with a personalized note with it! That's the best part for me tbh! Keep growin !!"),
+('Alakananda','alakananda@gmail.com',"Fatima ke suggestions are the only suggestions I listen to! So ofcourse i had to try and experience the beauty of their products. I love them all! GlamSphere's products never cease to amaze mw! I love this store ");
 
 
 SELECT * FROM Products;
@@ -142,4 +155,4 @@ SELECT * FROM Users;
 SELECT * FROM Shades;
 SELECT * FROM Orders;
 SELECT * FROM OrderDetail;
-SELECT * FROM Reviews;
+SELECT * FROM  ProductReviews;
