@@ -32,7 +32,7 @@ app.get("/home", (req, res) => {
     } else {
       // console.log(resultReviews);
       let queryProducts =
-        "SELECT productid, pname, price, category, quantityAvailable FROM products ORDER BY quantityAvailable DESC LIMIT 4;";
+        "SELECT productid, pname, price, category, quantityAvailable, imagePath FROM products ORDER BY quantityAvailable DESC LIMIT 4;";
       connection.query(queryProducts, (errProducts, resultProducts) => {
         if (errProducts) {
           console.log(errProducts);
@@ -68,7 +68,7 @@ app.get("/products", (req, res) => {
 //  https://www.youtube.com/watch?v=Ud5xKCYQTjM&ab_channel=WebDevSimplified
 //  https://www.youtube.com/watch?v=jI4K7L-LI58&ab_channel=WebDevSimplified
 
-// Login and Signup
+// Signup routes
 app.get("/signup", (req, res) => {
   res.render("signup.ejs");
 });
@@ -99,11 +99,12 @@ app.post("/user/signup", async (req, res) => {
   }
 });
 
+
+// Login routes
 app.get("/login", (req, res) => {
   res.render("login.ejs");
 });
 
-// to be fixed
 app.post("/user/login", async (req, res) => {
   const username = req.body.username;
     const password = req.body.password;
@@ -136,6 +137,10 @@ app.post("/user/login", async (req, res) => {
     res.redirect("/login");
   }
 });
+
+
+
+
 
 app.listen(port, () => {
   console.log(`server listening to port ${port}`);
