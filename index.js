@@ -139,6 +139,11 @@ app.post("/user/login", async (req, res) => {
 });
 
 
+// about our website
+app.get("/about", (req,res) => {
+  res.render("about.ejs");
+});
+
 
 
 
