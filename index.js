@@ -71,8 +71,19 @@ app.get("/products/makeup", (req,res) => {
       console.log(errProducts);
       res.send("Some error in fetching products from the database");
     } else {
-      console.log(resultProducts);
-      res.render("makeup.ejs",);
+      // console.log(resultProducts);
+      let queryReview = "SELECT pr.ReviewID, pr.*, u.FirstName, u.LastName, u.imagePath, p.PName FROM ProductReviews pr JOIN Products p ON pr.ProductID = p.ProductID JOIN users u ON pr.userid = u.userid WHERE pr.ProductID IN ( SELECT ProductID FROM Products WHERE MainCategory = 'makeup' ); ";
+      connection.query(queryReview, (errReviews,resultReviews) => {
+        if(errReviews) {
+          console.log(errReviews);
+      res.send("Some error in fetching products from the database");
+        }
+        else {
+          console.log(resultReviews);
+          res.render("makeup.ejs", {products : resultProducts, reviews : resultReviews});
+        }
+      }); 
+      
     }
   });
 });

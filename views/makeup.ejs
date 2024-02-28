@@ -110,72 +110,50 @@
    </div>
    <!-- product section end -->
 
+         <!-- customer section start -->
+         <div class="customer_section layout_padding">
+            <div class="container">
+               <div class="row">
+                  <div class="col-sm-12">
+                     <h1 class="customer_taital">Reviews for Makeup Products: </h1>
+                  </div>
+               </div>
+               <div id="main_slider" class="carousel slide" data-ride="carousel">
+                  <div class="carousel-inner">
+                     <% reviews.forEach((item, index)=> { %>
+                        <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                           <div class="client_section_2">
+                              <div class="client_main">
+                                 <div class="client_left">
+                                    <div class="client_img"><img src="<%= item.imagePath %>"></div>
+                                 </div>
+                                 <div class="client_right">
+                                    <h3 class="name_text" style="text-transform: uppercase;">
+                                       <%= item.FirstName+" "+ item.LastName%>
+                                    </h3>
+                                    <h5>
+                                       <%= item.PName %>
+                                    </h5>
+                                    <p class="dolor_text">
+                                       <%= item.ReviewComment %>
+                                    </p>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <% }); %>
+                  </div>
+                  <a class="carousel-control-prev" href="#main_slider" role="button" data-slide="prev">
+                     <i class="fa fa-angle-left"></i>
+                  </a>
+                  <a class="carousel-control-next" href="#main_slider" role="button" data-slide="next">
+                     <i class="fa fa-angle-right"></i>
+                  </a>
+               </div>
+            </div>
+         </div>
 
-   <!-- customer section start -->
-   <div class="customer_section layout_padding">
-      <div class="container">
-         <div class="row">
-            <div class="col-sm-12">
-               <h1 class="customer_taital">Product Reviews</h1>
-            </div>
-         </div>
-         <div id="main_slider" class="carousel slide" data-ride="carousel">
-            <div class="carousel-inner">
-               <div class="carousel-item active">
-                  <div class="client_section_2">
-                     <div class="client_main">
-                        <div class="client_left">
-                           <div class="client_img"><img src="images/client-img.png"></div>
-                        </div>
-                        <div class="client_right">
-                           <h3 class="name_text">Aamna</h3>
-                           <p class="dolor_text">Sunscreen lagani hoti hai yaar roz!and their sunscreen collection is
-                              soo soo good! they have multiple kinds of sunscreen to select from! </p>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <div class="carousel-item">
-                  <div class="client_section_2">
-                     <div class="client_main">
-                        <div class="client_left">
-                           <div class="client_img"><img src="images/client-img.png"></div>
-                        </div>
-                        <div class="client_right">
-                           <h3 class="name_text">Alaka</h3>
-                           <p class="dolor_text">Fatima's suggestions are the only suggestions I listen to! So ofcourse
-                              i had to try and experience the beauty of their products. I love them all! GlamSphere's
-                              products never cease to amaze mw! I love this store </p>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <div class="carousel-item">
-                  <div class="client_section_2">
-                     <div class="client_main">
-                        <div class="client_left">
-                           <div class="client_img"><img src="images/client-img.png"></div>
-                        </div>
-                        <div class="client_right">
-                           <h3 class="name_text">Apeksha</h3>
-                           <p class="dolor_text">Their collection! OMG they have everything you'll ever need for your
-                              skin! The customer service is good. Delivery is on time and every package comes with a
-                              personalized note with it! That's the best part for me tbh! Keep growin' :) </p>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
-            <a class="carousel-control-prev" href="#main_slider" role="button" data-slide="prev">
-               <i class="fa fa-angle-left"></i>
-            </a>
-            <a class="carousel-control-next" href="#main_slider" role="button" data-slide="next">
-               <i class="fa fa-angle-right"></i>
-            </a>
-         </div>
-      </div>
-   </div>
-   <!-- customer section end -->
+
 
    <!-- footer section start -->
    <div class="footer_section layout_padding">
