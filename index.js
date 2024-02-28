@@ -112,6 +112,12 @@ app.get("/products/skincare", (req,res) => {
   });
 });
 
+app.get("/products/view", (req,res) => {
+  const pid = req.query.pid;
+  console.log(pid);
+  res.render("viewproduct.ejs");
+});
+
 
 app.get("/cart", (req,res) => {
   let userid = 1;
