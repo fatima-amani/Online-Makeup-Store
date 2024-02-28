@@ -88,6 +88,30 @@ app.get("/products/makeup", (req,res) => {
   });
 });
 
+app.get("/products/skincare", (req,res) => {
+  let query = "SELECT * FROM Products WHERE MainCategory = 'skincare' ;";
+  connection.query(query, (errProducts, resultProducts) => {
+    if (errProducts) {
+      console.log(errProducts);
+      res.send("Some error in fetching products from the database");
+    } else {
+      // console.log(resultProducts);
+      let queryReview = "SELECT pr.ReviewID, pr.*, u.FirstName, u.LastName, u.imagePath, p.PName FROM ProductReviews pr JOIN Products p ON pr.ProductID = p.ProductID JOIN users u ON pr.userid = u.userid WHERE pr.ProductID IN ( SELECT ProductID FROM Products WHERE MainCategory = 'skincare' ); ";
+      connection.query(queryReview, (errReviews,resultReviews) => {
+        if(errReviews) {
+          console.log(errReviews);
+      res.send("Some error in fetching products from the database");
+        }
+        else {
+          console.log(resultReviews);
+          res.render("skincare.ejs", {products : resultProducts, reviews : resultReviews});
+        }
+      }); 
+      
+    }
+  });
+});
+
 
 app.get("/cart", (req,res) => {
   let userid = 1;

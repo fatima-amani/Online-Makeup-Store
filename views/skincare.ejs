@@ -10,7 +10,7 @@
    <meta name="viewport" content="width=device-width, initial-scale=1">
    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
    <!-- site metas -->
-   <title>Make-Up</title>
+   <title>Skin-Care</title>
    <meta name="keywords" content="">
    <meta name="description" content="">
    <meta name="author" content="">
@@ -35,7 +35,7 @@
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css"
       media="screen">
    <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
-   <link rel="stylesheet" href="css/mak">
+   <link rel="stylesheet" href="makeup.css">
 </head>
 
 <body>
@@ -74,7 +74,7 @@
       <div class="container">
          <div class="row">
             <div class="col-sm-12">
-               <h1 class="product_taital">Make-Up Products</h1>
+               <h1 class="product_taital">Skin-Care Products</h1>
                <p class="product_text">incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
                   nostrud exercitation</p>
             </div>
@@ -115,7 +115,7 @@
       <div class="container">
          <div class="row">
             <div class="col-sm-12">
-               <h1 class="customer_taital">Reviews for Makeup Products: </h1>
+               <h1 class="customer_taital">Reviews for Skincare Products: </h1>
             </div>
          </div>
          <div id="main_slider" class="carousel slide" data-ride="carousel">
@@ -130,11 +130,11 @@
                            <div class="client_right">
                               <h3 class="name_text" style="text-transform: uppercase;">
                                  <%= item.FirstName+" "+ item.LastName%>
-                                    </h3>
-                                    <h5>
-                                       <%= item.PName %>
-                                    </h5>
-                                    <p class=" dolor_text">
+                                 </h3>
+                                 <h5>
+                                    <%= item.PName %>
+                                 </h5>
+                                 <p class=" dolor_text">
                                     <%= item.ReviewComment %>
                                        </p>
                            </div>
@@ -152,14 +152,13 @@
          </div>
       </div>
    </div>
-   <!-- customer section ends -->
-
-
+   <!-- customer section end -->
 
    <!-- footer section start -->
    <div class="footer_section layout_padding">
       <div class="container">
-         <div class="footer_logo"><a href="index.html"><img src="images/image.png"></a></div>
+         <div class="footer_logo"><a href="index.html"><img
+                  src="D:\tasna\front_end\src\Components\Navbar\logo_f.png"></a></div>
          <div class="contact_section_2">
             <div class="row">
                <div class="col-sm-4">
@@ -248,28 +247,28 @@
          document.getElementById("mySidenav").style.width = "0";
       }
 
-      function loadMore() {
-         let loadMoreBtn = document.querySelector('.seemore_bt'); // Corrected selector
-         let currentItem = 12;
+      //   function loadMore(){
+      //       let loadMoreBtn = document.querySelector('.seemore_bt'); // Corrected selector
+      //       let currentItem = 16;
 
-         loadMoreBtn.onclick = () => {
-            let boxes = document.querySelectorAll('.product_box'); // Corrected selector
-            boxes = Array.from(boxes); // Convert NodeList to Array
+      //       loadMoreBtn.onclick = () => {
+      //           let boxes = document.querySelectorAll('.product_box'); // Corrected selector
+      //           boxes = Array.from(boxes); // Convert NodeList to Array
 
-            for (let i = currentItem; i < currentItem + 4 && i < boxes.length; i++) {
-               boxes[i].style.display = "inline-block";
-            }
+      //           for (let i = currentItem; i < currentItem + 4 && i < boxes.length; i++) {
+      //               boxes[i].style.display = "inline-block";
+      //           }
 
-            currentItem += 4;
+      //           currentItem += 4;
 
-            if (currentItem >= boxes.length) {
-               loadMoreBtn.style.display = "none";
-            }
-         }
-      }
+      //           if (currentItem >= boxes.length) {
+      //               loadMoreBtn.style.display = "none";
+      //           }
+      //       }
+      //   }
 
-      // Call the function when the page loads
-      window.onload = loadMore;
+      //   // Call the function when the page loads
+      //   window.onload = loadMore;
 
 
 
