@@ -1,8 +1,11 @@
+require('dotenv').config();
+
 const express = require("express");
 const app = express();
 const port = 3000;
 const path = require("path");
 const bcrypt = require("bcrypt");
+const jwt = require('jsonwebtoken');
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -140,10 +143,6 @@ app.get("/cart", (req,res) => {
   
 });
 
-// user authentication
-//  https://www.youtube.com/watch?v=Ud5xKCYQTjM&ab_channel=WebDevSimplified
-//  https://www.youtube.com/watch?v=jI4K7L-LI58&ab_channel=WebDevSimplified
-
 // Signup routes
 app.get("/signup", (req, res) => {
   res.render("signup.ejs");
@@ -189,21 +188,21 @@ app.post("/user/login", async (req, res) => {
     connection.query(queryLogin,[username], async (errLogin, resultLogin) => {
       if (errLogin) {
         console.log(errLogin);
-        res.send("error with login");
+        // res.send("error with login");
+        return res.status(500).json({ success: false, message: 'An error occurred' });
       } else {
         if (resultLogin.length == 0) {
-          res.redirect(
-            "/login?alert=" + encodeURIComponent("Username does not exist")
-          );
+          return res.status(404).json({ success: false, message: 'User not found' });
         } else {
+          console.log(resultLogin);
           let hashedPassword = resultLogin[0].PasswordHash;
           let isPasswordMatch = await bcrypt.compare(password, hashedPassword);
           if (isPasswordMatch) {
-            res.send("login successfull");
+            let user = resultLogin[0];
+            console.log(user);
+            return res.status(200).json({ success: true, message: 'Authentication successful', user });
           } else {
-            res.redirect(
-              "/login?alert=" + encodeURIComponent("Incorrect Password !!")
-            );
+            res.status(401).json({ success: false, message: 'Incorrect password' });
           }
         }
       }
