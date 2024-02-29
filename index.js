@@ -54,63 +54,22 @@ app.get("/home", (req, res) => {
 });
 
 app.get("/products", (req, res) => {
-  let queryProducts =
-    "SELECT productid, pname, price, category, quantityAvailable FROM products;";
-  connection.query(queryProducts, (errProducts, resultProducts) => {
+  const queryString = req.query.category;
+  let queryProducts = "";
+  if(!queryString) {
+    queryProducts = "SELECT productid, pname, price, category, quantityAvailable FROM products;";
+  }
+  else {
+    queryProducts = "SELECT productid, pname, price, category, quantityAvailable FROM products WHERE MainCategory = ?;";
+  }
+ 
+  connection.query(queryProducts,[queryString], (errProducts, resultProducts) => {
     if (errProducts) {
       console.log(errProducts);
       res.send("Some error in fetching products from the database");
     } else {
       // console.log(resultProducts);
       res.render("products.ejs", { products: resultProducts });
-    }
-  });
-});
-
-app.get("/products/makeup", (req,res) => {
-  let query = "SELECT * FROM Products WHERE MainCategory = 'makeup' ;";
-  connection.query(query, (errProducts, resultProducts) => {
-    if (errProducts) {
-      console.log(errProducts);
-      res.send("Some error in fetching products from the database");
-    } else {
-      // console.log(resultProducts);
-      let queryReview = "SELECT pr.ReviewID, pr.*, u.FirstName, u.LastName, u.imagePath, p.PName FROM ProductReviews pr JOIN Products p ON pr.ProductID = p.ProductID JOIN users u ON pr.userid = u.userid WHERE pr.ProductID IN ( SELECT ProductID FROM Products WHERE MainCategory = 'makeup' ); ";
-      connection.query(queryReview, (errReviews,resultReviews) => {
-        if(errReviews) {
-          console.log(errReviews);
-      res.send("Some error in fetching products from the database");
-        }
-        else {
-          console.log(resultReviews);
-          res.render("makeup.ejs", {products : resultProducts, reviews : resultReviews});
-        }
-      }); 
-      
-    }
-  });
-});
-
-app.get("/products/skincare", (req,res) => {
-  let query = "SELECT * FROM Products WHERE MainCategory = 'skincare' ;";
-  connection.query(query, (errProducts, resultProducts) => {
-    if (errProducts) {
-      console.log(errProducts);
-      res.send("Some error in fetching products from the database");
-    } else {
-      // console.log(resultProducts);
-      let queryReview = "SELECT pr.ReviewID, pr.*, u.FirstName, u.LastName, u.imagePath, p.PName FROM ProductReviews pr JOIN Products p ON pr.ProductID = p.ProductID JOIN users u ON pr.userid = u.userid WHERE pr.ProductID IN ( SELECT ProductID FROM Products WHERE MainCategory = 'skincare' ); ";
-      connection.query(queryReview, (errReviews,resultReviews) => {
-        if(errReviews) {
-          console.log(errReviews);
-      res.send("Some error in fetching products from the database");
-        }
-        else {
-          console.log(resultReviews);
-          res.render("skincare.ejs", {products : resultProducts, reviews : resultReviews});
-        }
-      }); 
-      
     }
   });
 });
@@ -142,6 +101,46 @@ app.get("/cart", (req,res) => {
   }
   
 });
+
+app.post("/addtocart", (req, res) => {
+  console.log(req.body);
+  let query = "SELECT CartItemID, Quantity FROM Cart WHERE ProductID = ? AND UserID = ? ;";
+  let details = [req.body.productid, req.body.userid];
+  connection.query(query, details, (errItem, resItem) => {
+      if (errItem) {
+          console.log(errItem);
+          res.status(500).send("Internal Server Error");
+      } else {
+          console.log(resItem);
+          if (resItem.length === 0) {
+              let queryAddCart = "INSERT INTO CART(UserID, ProductID, Quantity) VALUES (?,?,1);";
+              connection.query(queryAddCart, details, (errAddCart, resAddCart) => {
+                  if (errAddCart) {
+                      console.log(errAddCart);
+                      res.status(500).send("Internal Server Error");
+                  } else {
+                      res.status(200).send("Added to cart");
+                      console.log("Added to cart");
+                  }
+              });
+          } else {
+              let currentQuantity = resItem[0].Quantity;
+              let queryUpdateCart = "UPDATE Cart SET Quantity = ? WHERE UserID = ? AND ProductID = ?;";
+              connection.query(queryUpdateCart, [currentQuantity + 1, req.body.userid, req.body.productid], (errUpdateCart, resUpdateCart) => {
+                  if (errUpdateCart) {
+                      console.log(errUpdateCart);
+                      res.status(500).send("Internal Server Error");
+                  } else {
+                      res.status(200).send("Cart updated");
+                      console.log("Cart updated");
+                  }
+              });
+          }
+      }
+  });
+});
+
+
 
 // Signup routes
 app.get("/signup", (req, res) => {

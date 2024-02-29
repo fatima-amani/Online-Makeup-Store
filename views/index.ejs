@@ -45,20 +45,20 @@
          <nav class="navbar navbar-light bg-light justify-content-between">
             <div id="mySidenav" class="sidenav">
                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-               <a href="index.html">Home</a>
-               <a href="Make-up.html">Make-Up</a>
-               <a href="skincare.html">Skin-Care</a>
-               <a href="cart.html">Cart</a>
-               <a href="about.html">About</a>
-               <a href="contact.html">Contact</a>
+               <a href="http://localhost:3000/home">Home</a>
+               <a href="http://localhost:3000/products?category=makeup">Make-Up</a>
+               <a href="http://localhost:3000/products?category=skincare">Skin-Care</a>
+               <a href="http://localhost:3000/cart">Cart</a>
+               <a href="http://localhost:3000/about">About</a>
+               <a href="http://localhost:3000/contact">Contact</a>
             </div>
             <span class="toggle_icon" onclick="openNav()"><img src="images/toggle-icon.png"></span>
-            <a class="logo" href="index.html"><img src="images/glamsphere.png"></a></a>
+            <a class="logo" href="http://localhost:3000/home"><img src="images/glamsphere.png"></a></a>
             <form class="form-inline ">
                <div class="login_text">
                   <ul>
-                     <li><a href="#"><img src="images/user-icon.png"></a></li>
-                     <li><a href="#"><img src="images/bag-icon.png"></a></li>
+                     <li><a href="http://localhost:3000/profile"><img src="images/user-icon.png"></a></li>
+                     <li><button onclick="openCart()"><img src="images/bag-icon.png"></button></li>
                      <!-- <li><a href="#"><img src="images/search-icon.png"></a></li> -->
                      <!-- <li><input type="text" placeholder="Search..."></li> -->
                   </ul>
@@ -161,7 +161,8 @@
                         <div class="btn_main">
                            <div class="buy_bt">
                               <ul>
-                                 <li class="active"><a href="#">Buy Now</a></li>
+                                 <li class="active"><button onclick="addcart(<%= product.productid %>)">Add to
+                                       Cart</button></li>
                                  <!-- <li><a href="#">Buy Now</a></li> -->
                               </ul>
                            </div>
@@ -252,7 +253,7 @@
             </div>
             <div class="col-md-6">
                <div class="contact_main">
-                  <div class="contact_bt"><a href="contact.html">Contact Form</a></div>
+                  <div class="contact_bt"><a href="http://localhost:3000/contact">Contact Form</a></div>
                   <!--<div class="newletter_bt"><a href="#">Newletter</a></div>-->
                </div>
             </div>
@@ -268,7 +269,7 @@
    <!-- footer section start -->
    <div class="footer_section layout_padding">
       <div class="container">
-         <div class="footer_logo"><a href="index.html"><img src="images/image.png"></a></div>
+         <div class="footer_logo"><a href="http://localhost:3000/home"><img src="images/image.png"></a></div>
          <div class="contact_section_2">
             <div class="row">
                <div class="col-sm-4">
@@ -276,21 +277,21 @@
                   <div class="address_bt">
                      <ul>
                         <li>
-                           <a href="#">
+                           <a href="https://maps.app.goo.gl/RnGmpCqyCNPFZxDH7">
                               <i class="fa fa-map-marker" aria-hidden="true"></i><span class="padding_left10">Address :
-                                 RNSIT farms, Channasandra, Bangalore-560070</span>
+                                 Forum Mall, South Bangalore </span>
                            </a>
                         </li>
                         <li>
-                           <a href="#">
+                           <a href="tel:9470806786">
                               <i class="fa fa-phone" aria-hidden="true"></i><span class="padding_left10">Call :
-                                 9844420210, 9470806788</span>
+                                 9844420212, 9470806786</span>
                            </a>
                         </li>
                         <li>
-                           <a href="#">
+                           <a href="mailto:fatima.amani65@gmail.com">
                               <i class="fa fa-envelope" aria-hidden="true"></i><span class="padding_left10">Email :
-                                 1rn21ai04x.name@rnsit.ac.in</span>
+                                 contactus@glamsphere.in</span>
                            </a>
                         </li>
                      </ul>
@@ -358,60 +359,38 @@
       }
    </script>
    <script>
-      fetch('/home')
-  .then(response => {
-    const accessToken = response.headers.get('accessToken');
-  })
-  .catch(error => console.error('Error:', error));
-      // Call the function to retrieve and store the token when the page loads
-      window.onload = function () {
-         getTokenAndStore();
-      };
-
-      // Add event listener to handle anchor tag clicks
-      document.addEventListener('click', function (event) {
-         // Check if the clicked element is an anchor tag
-         if (event.target.tagName === 'A') {
-            // Call the function to retrieve and store the token when an anchor tag is clicked
-            getTokenAndStore();
-
-            // Prevent the default behavior of the anchor tag
-            event.preventDefault();
-
-            // Stop the event from propagating further up the DOM tree
-            event.stopPropagation();
-         }
-      });
-
-      // Function to send authenticated requests with token in header
-      async function sendAuthenticatedRequest(url, method, data) {
-         try {
-            const accessToken = localStorage.getItem('accessToken');
-
-            // Add the token to the Authorization header
-            const headers = {
-               'Authorization': `Bearer ${accessToken}`,
-               'Content-Type': 'application/json'
+      function addcart(product_id) {
+         const user_id = parseInt(localStorage.getItem("UserID"));
+         if (!user_id || isNaN(user_id)) {
+            window.location.href = "http://localhost:3000/login";
+         } else {
+            let product = {
+               productid: product_id,
+               userid: user_id
             };
-
-            // Make the HTTP request
-            const response = await fetch(url, {
-               method: method,
-               headers: headers,
-               body: JSON.stringify(data)
-            });
-
-            // Handle the response
-            if (response.ok) {
-               const responseData = await response.json();
-               console.log('Response:', responseData);
-            } else {
-               console.error('Error:', response.statusText);
-            }
-         } catch (error) {
-            console.error('Error sending request:', error);
+            fetch('http://localhost:3000/addtocart', {
+               method: 'POST',
+               headers: {
+                  'Content-Type': 'application/json',
+               },
+               body: JSON.stringify(product)
+            })
+               .then(response => {
+                  if (!response.ok) {
+                     throw new Error('Internal Server Error');
+                  }
+                  return response.json();
+               })
+               .then(data => {
+                  console.log(data);
+               })
+               .catch(error => {
+                  console.error('Error:', error.message);
+                  // Handle the error appropriately, such as displaying a message to the user
+               });
          }
       }
+
 
    </script>
 </body>
