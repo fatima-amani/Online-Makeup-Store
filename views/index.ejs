@@ -35,7 +35,7 @@
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css"
       media="screen">
    <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
-   <script src="js/homepage.js"></script>
+   <!-- <script src="js/homepage.js"></script> -->
 </head>
 
 <body>
@@ -53,14 +53,17 @@
                <a href="http://localhost:3000/contact">Contact</a>
             </div>
             <span class="toggle_icon" onclick="openNav()"><img src="images/toggle-icon.png"></span>
-            <a class="logo" href="http://localhost:3000/home"><img src="images/glamsphere.png"></a></a>
-            <form class="form-inline ">
+            <div class="logo"><img src="images/glamsphere.png"></div>
+            <div class="form-inline ">
                <div class="login_text">
                   <ul>
                      <li><a href="http://localhost:3000/profile"><img src="images/user-icon.png"></a></li>
-                     <li><button onclick="openCart()"><img src="images/bag-icon.png"></button></li>
-                     <!-- <li><a href="#"><img src="images/search-icon.png"></a></li> -->
-                     <!-- <li><input type="text" placeholder="Search..."></li> -->
+                     <li>
+                        <form id="cartForm" method="POST" action="http://localhost:3000/cart">
+                           <input type="number" id="username" name="username" style="display: none;">
+                           <button><img src="images/bag-icon.png"></button>
+                        </form>
+                     </li>
                   </ul>
                </div>
             </form>
@@ -359,6 +362,15 @@
       }
    </script>
    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+         var usernameInput = document.getElementById('username');
+         if (usernameInput) {
+            var userID = parseInt(localStorage.getItem("UserID"));
+            if (!isNaN(userID)) {
+               usernameInput.value = userID;
+            }
+         }
+      });
       function addcart(product_id) {
          const user_id = parseInt(localStorage.getItem("UserID"));
          if (!user_id || isNaN(user_id)) {
@@ -390,6 +402,77 @@
                });
          }
       }
+
+      // function openCart() {
+      //    const user_id = parseInt(localStorage.getItem("UserID"));
+      //    if (!user_id || isNaN(user_id)) {
+      //       window.location.href = "http://localhost:3000/login";
+      //    } else {
+      //       let user = {
+
+      //       };
+      //       const fielderUsername = "example_username"; // Replace this with the actual fielder's username
+
+      //       axios.post('/http://localhost:3000/cart', {
+      //          userid: user_id,
+      //       })
+      //          .then(() => {
+      //             // Optional: Handle success if needed
+      //          })
+      //          .catch(error => {
+      //             // Handle errors here
+      //          });
+
+      //       // Code continues here without waiting for the response
+
+      //       //   .then(response => {
+      //       //       if (!response.ok) {
+      //       //           throw new Error('Internal Server Error');
+      //       //       }
+      //       //       return response.json();
+      //       //   })
+      //       //   .then(data => {
+      //       //       console.log(data);
+      //       //       // Redirect to cart page
+      //       //       window.location.href = "http://localhost:3000/cart"; // Assuming the cart page URL is "/cart"
+      //       //   })
+      //       //   .catch(error => {
+      //       //       console.error('Error:', error.message);
+      //       //       // Handle the error appropriately, such as displaying a message to the user
+      //       //   });
+      //    }
+      // }
+
+      // function openCart() {
+      //    const user_id = parseInt(localStorage.getItem("UserID"));
+      //    if (!user_id || isNaN(user_id)) {
+      //       window.location.href = "http://localhost:3000/login";
+      //    } else {
+      //       let user = {
+      //          userid: user_id
+      //       };
+      //       fetch('http://localhost:3000/cart', {
+      //          method: 'POST',
+      //          headers: {
+      //             'Content-Type': 'application/json',
+      //          },
+      //          body: JSON.stringify(user)
+      //       })
+      //          .then(response => {
+      //             if (!response.ok) {
+      //                throw new Error('Internal Server Error');
+      //             }
+      //             return response.json();
+      //          })
+      //          .then(data => {
+      //             console.log(data);
+      //          })
+      //          .catch(error => {
+      //             console.error('Error:', error.message);
+      //             // Handle the error appropriately, such as displaying a message to the user
+      //          });
+      //    }
+      // }
 
 
    </script>

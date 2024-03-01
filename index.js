@@ -81,31 +81,33 @@ app.get("/products/view", (req,res) => {
 });
 
 
-app.get("/cart", (req,res) => {
-  let userid = 1;
-  let query = "SELECT c.CartItemID, c.ProductID, c.UserID, p.PName, p.Price,p.imagePath, c.quantity FROM Cart c JOIN Products p ON c.ProductID = p.ProductID WHERE c.UserID = ?;";
-  try {
-    connection.query(query,[userid], (errCart, resultCart) => {
-      if(errCart) {
-        console.log(errCart);
-        res.send("some error with database");
-      }
-      else {
-        console.log(resultCart);
-        res.render("cart.ejs", { cartItems : resultCart});
-      }
-    });
-  } catch(err) {
-    console.log(err);
-    res.redirect("/home");
-  }
+app.post("/cart", (req,res) => {
+  console.log(req.body);
+    let userid = parseInt(req.body.userid);
+    let query = 
+      "SELECT c.CartItemID, c.ProductID, c.UserID, p.PName, p.Price,p.imagePath, c.quantity FROM Cart c,Products p where c.productid = p.productid and c.userid=1;";
+    try {
+      connection.query(query, [userid], (errCart, resultCart) => {
+        if (errCart) {
+          console.log(errCart);
+          res.send("some error with database");
+        } else {
+          console.log(resultCart);
+          // if(resultCart == 0) 
+          res.render("cart.ejs", { cartItems: resultCart });
+        }
+      });
+    } catch (err) {
+      console.log(err);
+      res.redirect("/home");
+    }
   
 });
 
 app.post("/addtocart", (req, res) => {
   console.log(req.body);
   let query = "SELECT CartItemID, Quantity FROM Cart WHERE ProductID = ? AND UserID = ? ;";
-  let details = [req.body.productid, req.body.userid];
+  let details = [req.body.userid, req.body.productid];
   connection.query(query, details, (errItem, resItem) => {
       if (errItem) {
           console.log(errItem);
@@ -138,6 +140,17 @@ app.post("/addtocart", (req, res) => {
           }
       }
   });
+});
+
+// checkout
+app.get("/checkout" , (req,res) => {
+  console.log("you have enetered checkout section");
+  console.log(req.query);
+  return res.status(200).json({ success: true, message: 'checkedout sucessfully' });
+});
+
+app.get("/orderplaced",(req,res) => {
+  res.render("orderSuccess.ejs");
 });
 
 
@@ -197,6 +210,7 @@ app.post("/user/login", async (req, res) => {
           let hashedPassword = resultLogin[0].PasswordHash;
           let isPasswordMatch = await bcrypt.compare(password, hashedPassword);
           if (isPasswordMatch) {
+            // success in login
             let user = resultLogin[0];
             console.log(user);
             return res.status(200).json({ success: true, message: 'Authentication successful', user });

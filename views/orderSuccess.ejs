@@ -68,60 +68,11 @@
       </div>
    </div>
    <!-- header section end -->
-
-   <!-- product section start -->
-   <section class="cart_section layout_padding">
-      <div class="container">
-         <h2>Your Shopping Cart</h2>
-
-         <table class="cart-table">
-            <thead>
-               <tr>
-                  <th>Product</th>
-                  <th>Quantity</th>
-                  <th>Subtotal</th>
-               </tr>
-            </thead>
-            <tbody>
-               <tr>
-                  <% if (cartItems.length==0) { %>
-                     <h2>NO ITEMS IN CART !! Shop here <a href="http://localhost:3000/products">here</a></h2>
-                     <% } else { %>
-                        <% for (let item of cartItems) { %>
-                           <td>
-                              <div class="cart-info">
-                                 <img class="cart-image" src="<%= item.imagePath %>">
-                                 <div class="cart-details">
-                                    <p class="cart-title">
-                                       <%= item.PName %>
-                                    </p>
-                                    <span class="cart-price">
-                                       <%= item.Price %>
-                                    </span>
-                                    <!-- <a href="#" class="cart-remove">Remove</a> -->
-                                 </div>
-                              </div>
-                           </td>
-                           <td>
-                              <%= item.quantity %>
-                           </td>
-                           <td>
-                              <%= item.Price * item.quantity %>
-                           </td>
-                           <% } %>
-                              <% } %>
-               </tr>
-
-            </tbody>
-         </table>
-
-         <div class="checkout-section">
-            <div class="btn"><a href="http://localhost:3000/home">Continue Shopping</a></div>
-            <div class="btn"><button onclick="checkout()">Checkout</button></div>
-         </div>
-      </div>
-   </section>
-   <!-- customer section end -->
+   <div id="orderMessage" style="padding-top: 200px; padding-bottom: 200px; text-align: center;">
+    <h1>HURRAY !! YOUR ORDER PLACES SUCESSFULLY </h1>
+   <h3>Expected Delivery Time: 5 days </h3>
+   </div>
+   
 
    <!-- footer section start -->
    <div class="footer_section layout_padding">
@@ -214,60 +165,6 @@
       function closeNav() {
          document.getElementById("mySidenav").style.width = "0";
       }
-
-      //   function loadMore(){
-      //       let loadMoreBtn = document.querySelector('.seemore_bt'); // Corrected selector
-      //       let currentItem = 12;
-
-      //       loadMoreBtn.onclick = () => {
-      //           let boxes = document.querySelectorAll('.product_box'); // Corrected selector
-      //           boxes = Array.from(boxes); // Convert NodeList to Array
-
-      //           for (let i = currentItem; i < currentItem + 4 && i < boxes.length; i++) {
-      //               boxes[i].style.display = "inline-block";
-      //           }
-
-      //           currentItem += 4;
-
-      //           if (currentItem >= boxes.length) {
-      //               loadMoreBtn.style.display = "none";
-      //           }
-      //       }
-      //   }
-
-      //   // Call the function when the page loads
-      //   window.onload = loadMore;
-
-      function checkout() {
-         // Specify the URL and query string
-         const url = "http://localhost:3000/checkout";
-         let userid = parseInt(localStorage.getItem("UserID"));
-
-         const queryString = `userid=${userid}`; 
-
-         // Create the full URL with the query string
-         const fullUrl = `${url}?${queryString}`;
-
-         // Send the GET request
-         fetch(fullUrl)
-            .then(response => {
-               if (!response.ok) {
-                  throw new Error('Network response was not ok');
-               }
-               return response.json(); // Assuming the response is JSON
-            })
-            .then(data => {
-               if(data.success == true) {
-                  window.location.href = "http://localhost:3000/orderplaced";
-               }
-            })
-            .catch(error => {
-               // Handle errors
-               console.error('There was a problem with the fetch operation:', error);
-            });
-      }
-
-
    </script>
 </body>
 
