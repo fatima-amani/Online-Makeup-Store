@@ -1,5 +1,6 @@
 CREATE DATABASE Glamspheredb;
 USE Glamspheredb;
+SHOW TABLES;
 
 
 CREATE TABLE Products (
@@ -55,6 +56,7 @@ CREATE TABLE OrderDetail (
     Subtotal DECIMAL(10, 2)
 );
 
+
 CREATE TABLE  ProductReviews (
     ReviewID SERIAL PRIMARY KEY,
     UserID INTEGER REFERENCES Users(UserID)  ON DELETE CASCADE,
@@ -70,7 +72,6 @@ CREATE TABLE StoreReviews (
     EmailID VARCHAR(255) REFERENCES USERS(EMAILID),
     Content VARCHAR(500) NOT NULL
 );
-
 CREATE TABLE CART(
 	CartItemID SERIAL PRIMARY KEY,
     UserID INTEGER REFERENCES Users(UserID)  ON DELETE CASCADE,
@@ -93,25 +94,26 @@ DESC StoreReviews;
 
 INSERT INTO Products (PName, Brand, Manufacturer, CountryOfOrigin, PDescription, Price, QuantityAvailable, Category, MainCategory, imagePath)
 VALUES 
-('Nykaa Matte to Last! Transfer Proof Liquid Lipstick', 'Nykaa', 'FSN E-Commerce Ventures Limited', 'India', 'Nykaa''s Matte to Last! boasts serious staying power, promising transfer-proof color that won''t feather or flake. This liquid lipstick delivers a bold, ultra-matte finish in a spectrum of shades, from everyday nudes to dramatic reds. Enriched with Vitamin E, it aims to keep lips comfortable despite the matte texture. Reviewers praise its long-lasting wear but mention it can feel drying, suggesting lip balm prep. At a mid-range price, it''s a tempting option for those seeking budge-proof color, but be prepared for a true matte experience.', 599, 25, 'LIPSTICK','makeup',"\\images\\nykaamattetolast.png"),
-('M.A.C Strobe Cream', 'MAC', 'Estee Lauder Companies', 'Belgium', 'M∙A∙C Strobe Cream is your skin''s instant pick-me-up. This lightweight, illuminating moisturizer hydrates and brightens, banishing dullness with subtle shimmer. Packed with vitamins and green tea, it nourishes while fine, light-reflecting particles create a dewy, radiant glow. Apply alone for a natural boost, or mix with foundation for an all-over lit-from-within look. Available in 5 shades (pink, peach, silver, red, gold) to flatter all skin tones', 3950, 50, 'PRIMER','makeup',"\\images\\macstrobecream.png"),
-('Kay Beauty Hydrating Foundation', 'Kay Beauty', 'Nykaa-KK Beauty Pvt Ltd', 'India', 'Kay Beauty''s Hydrating Foundation is your key to radiant, flawless skin. This lightweight, ultra-creamy formula melts into your skin, providing buildable coverage from natural to high. It evens out skin tone, blurs imperfections, and delivers a dewy, luminous finish. Enriched with hydrating ingredients, it keeps your skin moisturized and comfortable all day. Breathable, second-skin feel makes it perfect for all skin types. It''s the foundation for any look, from subtle glam to flawless coverage.', 1299, 30, 'FOUNDATION','makeup',"\\images\\kaybeautyfoundation.png"),
-('Maybelline New York Instant Age Rewind Concealer', 'Maybelline', 'Yichang Tianmi International Cosmetics Co.', 'China', 'Maybelline''s Instant Age Rewind Concealer is your multi-tasking magic wand for brighter, younger-looking eyes. This do-it-all formula, infused with goji berry and Haloxyl, not only conceals dark circles and blemishes, but also claims to visibly reduce fine lines and firm the under-eye area. Its unique micro-corrector applicator with a built-in sponge blends seamlessly, providing light to medium coverage with a radiant, crease-resistant finish. Plus, SPF 18 shields your delicate skin from sun damage. Hydrating and lightweight, this concealer is suitable for most skin types and promises up to 12 hours of wear. Get ready to rewind the years and reveal a refreshed, luminous you!', 729, 38, 'CONCEALER','makeup',"\\images\\maybellineinstantagerewindconcealor.png"),
-('Huda Beauty Empowered Eyeshadow Palette', 'Huda Beauty', 'Huda Beauty LLC', 'Italy', 'The Huda Beauty Empowered Eyeshadow Palette is a versatile eyeshadow palette that includes 18 shades in a variety of finishes, including matte, metallic, shimmer, and gel-liner hybrid. The shades are all highly pigmented and blendable, making it easy to create a variety of eye looks. The palette also includes a mirror and two double-ended brushes.', 5900, 10, 'EYESHADOW','makeup',"\\images\\hudabeautyempoweredpallete.png");
+('Nykaa Matte to Last! Transfer Proof Liquid Lipstick', 'Nykaa', 'Nykaa''s Matte to Last! boasts serious staying power, promising transfer-proof color that won''t feather or flake. This liquid lipstick delivers a bold, ultra-matte finish in a spectrum of shades, from everyday nudes to dramatic reds. Enriched with Vitamin E, it aims to keep lips comfortable despite the matte texture. Reviewers praise its long-lasting wear but mention it can feel drying, suggesting lip balm prep. At a mid-range price, it''s a tempting option for those seeking budge-proof color, but be prepared for a true matte experience.', 599, 25, 'LIPSTICK','makeup',"\\images\\nykaamattetolast.png"),
+('M.A.C Strobe Cream', 'MAC', 'Estee Lauder Companies',  'M∙A∙C Strobe Cream is your skin''s instant pick-me-up. This lightweight, illuminating moisturizer hydrates and brightens, banishing dullness with subtle shimmer. Packed with vitamins and green tea, it nourishes while fine, light-reflecting particles create a dewy, radiant glow. Apply alone for a natural boost, or mix with foundation for an all-over lit-from-within look. Available in 5 shades (pink, peach, silver, red, gold) to flatter all skin tones', 3950, 50, 'PRIMER','makeup',"\\images\\macstrobecream.png"),
+('Kay Beauty Hydrating Foundation', 'Kay Beauty', 'Kay Beauty''s Hydrating Foundation is your key to radiant, flawless skin. This lightweight, ultra-creamy formula melts into your skin, providing buildable coverage from natural to high. It evens out skin tone, blurs imperfections, and delivers a dewy, luminous finish. Enriched with hydrating ingredients, it keeps your skin moisturized and comfortable all day. Breathable, second-skin feel makes it perfect for all skin types. It''s the foundation for any look, from subtle glam to flawless coverage.', 1299, 30, 'FOUNDATION','makeup',"\\images\\kaybeautyfoundation.png"),
+('Maybelline New York Instant Age Rewind Concealer', 'Maybelline','Maybelline''s Instant Age Rewind Concealer is your multi-tasking magic wand for brighter, younger-looking eyes. This do-it-all formula, infused with goji berry and Haloxyl, not only conceals dark circles and blemishes, but also claims to visibly reduce fine lines and firm the under-eye area. Its unique micro-corrector applicator with a built-in sponge blends seamlessly, providing light to medium coverage with a radiant, crease-resistant finish. Plus, SPF 18 shields your delicate skin from sun damage. Hydrating and lightweight, this concealer is suitable for most skin types and promises up to 12 hours of wear. Get ready to rewind the years and reveal a refreshed, luminous you!', 729, 38, 'CONCEALER','makeup',"\\images\\maybellineinstantagerewindconcealor.png"),
+('Huda Beauty Empowered Eyeshadow Palette', 'Huda Beauty', 'The Huda Beauty Empowered Eyeshadow Palette is a versatile eyeshadow palette that includes 18 shades in a variety of finishes, including matte, metallic, shimmer, and gel-liner hybrid. The shades are all highly pigmented and blendable, making it easy to create a variety of eye looks. The palette also includes a mirror and two double-ended brushes.', 5900, 10, 'EYESHADOW','makeup',"\\images\\hudabeautyempoweredpallete.png");
 
+INSERT INTO Products (PName, Brand, PDescription, Price, QuantityAvailable, Category, MainCategory, imagePath)
+VALUES
+('Nivea Cherry Shine Lip Care','Nivea',"Our Developer Darshana's favourite Nivea Cherry Shine Lip Balm promises a burst of cherry flavor and a touch of shine for your lips. This lip balm is formulated to hydrate and protect your lips, leaving them feeling soft and smooth. Enriched with cherry extract and jojoba oil, it provides long-lasting moisture and a subtle pink tint, enhancing your natural lip color. This lip balm is suitable for everyday use and protects your lips from dryness and chapping, keeping them kissably soft and healthy.",250,25,'LipBalm','skincare',"\\images\\niveacherryshine.png"),
+('Arata Matte Finish Sunscreen Cream','Arata',"Our Star Customer Aamna Siddiqui's favourite Arata Sunscreen boasts all-natural, vegan sunscreens for all skin types. Their SPF 50+ cream offers broad-spectrum UVA/UVB protection with tomato extracts (vitamin C & lycopene) for hydration and anti-aging. It has a matte finish and is free of harsh chemicals, emulsifiers, dyes, and preservatives. They are also cruelty-free and use recycled packaging.",499,100,'Sunscreen','skincare',"\\images\\aratasunscreen.png"),
+('The Face Shop Rice Water Bright Foaming Cleanser','The Face Shop'," Our Developer Fatima's favourite The Face Shop's Rice Water Bright Cleansing Foam is a gentle cleanser formulated with rice water extracts, known for brightening properties. This whipped cream-like cleanser claims to remove impurities, makeup, and dead skin cells, leaving your skin feeling clean, bright, and even-toned. Suitable for all skin types, it's free of harsh chemicals and boasts a light, refreshing fragrance. ",849,75,'FaceWash','skincare',"\\images\\ricewatercleanser.png");
 
-
+select * from users;
 INSERT INTO Users (FirstName, LastName, EmailID, Username, PasswordHash, Phone, UserRole, UserAddress)
 VALUES 
-('Fatima', 'Amani', 'fatima@gmail.com', 'fatima','fatty123', '9470806786', 'ADMIN', 'Mantri Serenity'),
-('Darshana', 'Nagar', 'darshana@gmail.com', 'darshana','diya123', '9844420212', 'ADMIN', 'Saraswati Nilaya'),
-('Alakananda', 'G M', 'alakananda@gmail.com','alaka', 'fruity123', '9999988888', 'CUSTOMER', 'Lakshmi Niwas'),
-('Aamna', 'Siddiqui', 'aamna@gmail.com',  'aamna','aamin123',  '9999977777', 'CUSTOMER', 'Alfred Street'),
-('Apeksha', 'Ankola', 'apeksha@gmail.com','apeksha', 'peksy123', '9999966666', 'CUSTOMER', 'Vijayanagar');
-
-
-
-
+('Fatima', 'Amani', 'fatima@gmail.com', 'fatima','$2b$10$ubKFnDFgVA96sNqXUSMwKuN26kbSJHbuax50djlWu3oG8MxeGOhza', '9470806786', 'ADMIN', 'Mantri Serenity'),
+('Darshana', 'Nagar', 'darshana@gmail.com', 'darshana','$10$fOmJ.f61zosufu4c72PbAu6m4HdQkUrmdzehchr6mr4B6SEBhYH/K', '9844420212', 'ADMIN', 'Saraswati Nilaya'),
+('Alakananda', 'G M', 'alakananda@gmail.com','alaka', '$10$fCmH/92CSBS7Iv9g.0sAsO53RsCqJ6Pn.d9x18zwa2Fm.eNQuwZfq', '9999988888', 'CUSTOMER', 'Lakshmi Niwas'),
+('Aamna', 'Siddiqui', 'aamna@gmail.com',  'aamna','$10$3QWbU8zPQ5tZQqhB.RLROumLlFB2QLZ8SiGu4r5SRE.rJ.a74txAi',  '9999977777', 'CUSTOMER', 'Alfred Street'),
+('Apeksha', 'Ankola', 'apeksha@gmail.com','apeksha', '$10$HJD61LM5jmS6ZU83ZPCX5.f2/KhxEs3BsACJdKVOLkSM48OIQ4316', '9999966666', 'CUSTOMER', 'Vijayanagar');
 
 
 INSERT INTO Shades (ProductID, ShadeName)
@@ -149,6 +151,11 @@ VALUES
 (5, 5, 1, '5900 IS TOO EXPENSIVE FOR AN EYESHADOW !!!!', '2024-02-20'),
 (1, 1, 5, 'LIPSTICK IS AMAZING !! BOMBAE IS MY FAVOURITE SHADE', '2024-02-25');
 
+INSERT INTO  ProductReviews (UserID, ProductID, Rating, ReviewComment, ReviewDate)
+VALUES
+(4,10,5,"Arata Sunscreen is my go to sunscreen. I saw it on SharkTank and ordered it asap!! ",'2024-02-28'),
+(2,9,5,"This lip balm is amazing, I will not have books in my bag but defnitely a lip balm ", '2024-02-28');
+
 INSERT INTO StoreReviews (RName, EmailID, Content)
 VALUES 
 ('Aamna', 'aamna@gmail.com','Sunscreen lagani hoti hai yaar roz!and their sunscreen collection is soo soo good! they have multiple kinds of sunscreen to select from!'),
@@ -159,7 +166,6 @@ INSERT INTO Cart (UserID ,ProductID , Quantity)
 VALUES 
 (1,2,1),
 (1,3,1),
-(1,2,1),
 (2,5,1),
 (2,3,2);
 
@@ -172,21 +178,18 @@ SELECT * FROM OrderDetail;
 SELECT * FROM ProductReviews;
 SELECT * FROM Cart;
 
-SELECT *
-FROM ProductReviews
-WHERE ProductID IN (
-    SELECT ProductID
-    FROM Products
-    WHERE MainCategory = 'makeup'
-);
+delete from orders where orderid > 2;
 
-SELECT *
-FROM ProductReviews
-WHERE ProductID IN (
-    SELECT ProductID
-    FROM Products
-    WHERE MainCategory = 'skincare'
-);
+
+UPDATE USERS
+SET PASSWORDHASH= "$2b$10$HJD61LM5jmS6ZU83ZPCX5.f2/KhxEs3BsACJdKVOLkSM48OIQ4316"
+WHERE USERID = 5;
+
+
+show tables;
+
+DELETE FROM PRODUCTS WHERE PRODUCTID > 5;
+
 
 
 

@@ -1,11 +1,11 @@
-require('dotenv').config();
+require("dotenv").config();
 
 const express = require("express");
 const app = express();
 const port = 3000;
 const path = require("path");
 const bcrypt = require("bcrypt");
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -56,148 +56,169 @@ app.get("/home", (req, res) => {
 app.get("/products", (req, res) => {
   const queryString = req.query.category;
   let queryProducts = "";
-  if(!queryString) {
-    queryProducts = "SELECT productid, pname, price, category, quantityAvailable FROM products;";
+  if (!queryString) {
+    queryProducts =
+      "SELECT productid, pname, price, category, quantityAvailable,imagePath FROM products;";
+  } else {
+    queryProducts =
+      "SELECT productid, pname, price, category, quantityAvailable,imagePath FROM products WHERE MainCategory = ?;";
   }
-  else {
-    queryProducts = "SELECT productid, pname, price, category, quantityAvailable FROM products WHERE MainCategory = ?;";
-  }
- 
-  connection.query(queryProducts,[queryString], (errProducts, resultProducts) => {
-    if (errProducts) {
-      console.log(errProducts);
-      res.send("Some error in fetching products from the database");
-    } else {
-      // console.log(resultProducts);
-      res.render("products.ejs", { products: resultProducts });
+
+  connection.query(
+    queryProducts,
+    [queryString],
+    (errProducts, resultProducts) => {
+      if (errProducts) {
+        console.log(errProducts);
+        res.send("Some error in fetching products from the database");
+      } else {
+        // console.log(resultProducts);
+        res.render("products.ejs", { products: resultProducts });
+      }
     }
-  });
+  );
 });
 
-app.get("/products/view", (req,res) => {
+app.get("/products/view", (req, res) => {
   const pid = req.query.pid;
   console.log(pid);
   res.render("viewproduct.ejs");
 });
 
-
-app.post("/cart", (req,res) => {
-  console.log(req.body);
-    let userid = parseInt(req.body.username);
-    console.log(userid);
-    let query = 
-      "SELECT c.CartItemID, c.ProductID, c.UserID, p.PName, p.Price,p.imagePath, c.quantity FROM Cart c,Products p where c.productid = p.productid and c.userid=?;";
-    try {
-      connection.query(query, [userid], (errCart, resultCart) => {
-        if (errCart) {
-          console.log(errCart);
-          res.send("some error with database");
-        } else {
-          console.log(resultCart);
-          // if(resultCart == 0) 
-          res.render("cart.ejs", { cartItems: resultCart });
-        }
-      });
-    } catch (err) {
-      console.log(err);
-      res.redirect("/home");
-    }
-  
+app.post("/cart", (req, res) => {
+  // console.log(req.body);
+  let userid = parseInt(req.body.username);
+  // console.log(userid);
+  let query =
+    "SELECT c.CartItemID, c.ProductID, c.UserID, p.PName, p.Price,p.imagePath, c.quantity FROM Cart c,Products p where c.productid = p.productid and c.userid=?;";
+  try {
+    connection.query(query, [userid], (errCart, resultCart) => {
+      if (errCart) {
+        console.log(errCart);
+        res.send("some error with database");
+      } else {
+        // console.log(resultCart);
+        // if(resultCart == 0)
+        res.render("cart.ejs", { cartItems: resultCart });
+      }
+    });
+  } catch (err) {
+    console.log(err);
+    res.redirect("/home");
+  }
 });
 
 app.post("/addtocart", (req, res) => {
   // console.log(req.body);
-  let query = "SELECT CartItemID, Quantity FROM Cart WHERE ProductID = ? AND UserID = ? ;";
+  let query =
+    "SELECT CartItemID, Quantity FROM Cart WHERE ProductID = ? AND UserID = ? ;";
   let details = [req.body.userid, req.body.productid];
   connection.query(query, details, (errItem, resItem) => {
-      if (errItem) {
-          console.log(errItem);
-          res.status(500).send("Internal Server Error");
-      } else {
-          // console.log(resItem);
-          if (resItem.length == 0) {
-              let queryAddCart = "INSERT INTO CART(UserID, ProductID, Quantity) VALUES (?,?,1);";
-              connection.query(queryAddCart, details, (errAddCart, resAddCart) => {
-                  if (errAddCart) {
-                      console.log(errAddCart);
-                      res.status(500).send("Internal Server Error");
-                  } else {
-                      res.status(200).send("Added to cart");
-                      // console.log("Added to cart");
-                  }
-              });
+    if (errItem) {
+      console.log(errItem);
+      res.status(500).send("Internal Server Error");
+    } else {
+      // console.log(resItem);
+      if (resItem.length == 0) {
+        let queryAddCart =
+          "INSERT INTO CART(UserID, ProductID, Quantity) VALUES (?,?,1);";
+        connection.query(queryAddCart, details, (errAddCart, resAddCart) => {
+          if (errAddCart) {
+            console.log(errAddCart);
+            res.status(500).send("Internal Server Error");
           } else {
-              let currentQuantity = resItem[0].Quantity;
-              let queryUpdateCart = "UPDATE Cart SET Quantity = ? WHERE UserID = ? AND ProductID = ?;";
-              connection.query(queryUpdateCart, [currentQuantity + 1, req.body.userid, req.body.productid], (errUpdateCart, resUpdateCart) => {
-                  if (errUpdateCart) {
-                      console.log(errUpdateCart);
-                      res.status(500).send("Internal Server Error");
-                  } else {
-                      res.status(200).send("Cart updated");
-                      // console.log("Cart updated");
-                  }
-              });
+            res.status(200).send("Added to cart");
+            // console.log("Added to cart");
           }
+        });
+      } else {
+        let currentQuantity = resItem[0].Quantity;
+        let queryUpdateCart =
+          "UPDATE Cart SET Quantity = ? WHERE UserID = ? AND ProductID = ?;";
+        connection.query(
+          queryUpdateCart,
+          [currentQuantity + 1, req.body.userid, req.body.productid],
+          (errUpdateCart, resUpdateCart) => {
+            if (errUpdateCart) {
+              console.log(errUpdateCart);
+              res.status(500).send("Internal Server Error");
+            } else {
+              res.status(200).send("Cart updated");
+              // console.log("Cart updated");
+            }
+          }
+        );
       }
+    }
   });
 });
 
 // checkout
-app.get("/checkout" , (req,res) => {
-  console.log("you have enetered checkout section");
+app.get("/checkout", (req, res) => {
+  // console.log("you have enetered checkout section");
   // console.log(req.query); // { userid: '6' }
   let user = parseInt(req.query.userid);
   // console.log(user);
-  let cartQuery = "SELECT c.Quantity,p.Price FROM Cart c, Products p where c.ProductID = p.ProductID and c.UserID = ? ;";
-  connection.query(cartQuery,[user], (errCart,resCart) => {
-    if(errCart) {
-      console.log("error with database fetching cart: ",errCart);
-        return res.status(500).json({ success: false, message: 'Error in fetching the cart' });
+  let cartQuery =
+    "SELECT c.Quantity,p.Price FROM Cart c, Products p where c.ProductID = p.ProductID and c.UserID = ? ;";
+  connection.query(cartQuery, [user], (errCart, resCart) => {
+    if (errCart) {
+      console.log("error with database fetching cart: ", errCart);
+      return res
+        .status(500)
+        .json({ success: false, message: "Error in fetching the cart" });
     } else {
       // console.log(resCart);
-      // create a new order 
-      queryOrder="INSERT INTO Orders (UserID, OrderDate, OrderAmount, OrderStatus) VALUES (?, DATE_FORMAT(NOW(), '%Y%m%d'), ?, 'PLACED');";
-      console.log(calcTotal(resCart));
-      listOrder = [user,calcTotal(resCart)];
-      connection.query(queryOrder,listOrder, (errOrder,resOrder) => {
-        if(errOrder) {
-          console.log("Error in creating order: ",errOrder);
-          return res.status(500).json({ success: false, message: 'Error in placing Order' });
-        }
-        else {
-          console.log(resOrder);
+      // create a new order
+      queryOrder =
+        "INSERT INTO Orders (UserID, OrderDate, OrderAmount, OrderStatus) VALUES (?, DATE_FORMAT(NOW(), '%Y%m%d'), ?, 'PLACED');";
+      // console.log(calcTotal(resCart));
+      listOrder = [user, calcTotal(resCart)];
+      connection.query(queryOrder, listOrder, (errOrder, resOrder) => {
+        if (errOrder) {
+          console.log("Error in creating order: ", errOrder);
+          return res
+            .status(500)
+            .json({ success: false, message: "Error in placing Order" });
+        } else {
+          // console.log(resOrder);
           console.log("ordercreated");
-          return res.status(200).json({ success: true, message: 'checked out successfully' });
-
+          clearCart(user);
+          return res
+            .status(200)
+            .json({ success: true, message: "checked out successfully" });
         }
       });
-      
     }
-  })  
-  
+  });
 });
 
 function calcTotal(cartItems) {
-  // console.log(cartItems);
   let total = 0;
-  cartItems.forEach(item => {
-      // Convert price to integer
-      const price = parseInt(item.Price);
-      // console.log(`price is: ${price}`);
-      // Multiply price by quantity and add to total
-      // console.log(`quantity is: ${item.Quantity}`);
-      total += price * item.Quantity;
+  cartItems.forEach((item) => {
+    const price = parseInt(item.Price);
+    total += price * item.Quantity;
   });
-  console.log(`total is: ${total}`);
+  // console.log(`total is: ${total}`);
   return total;
 }
 
-app.get("/orderplaced",(req,res) => {
+function clearCart(user){
+  let query = 'DELETE FROM Cart WHERE UserID = ?;';
+   try {connection.query(query,[user],(err,res) => {
+    if(err) {
+      console.log(err);
+    } else {
+      console.log("successfully clear cart for userid ",user);
+    }
+  })} catch(error) {
+    console.log(error);
+  }
+}
+
+app.get("/orderplaced", (req, res) => {
   res.render("orderSuccess.ejs");
 });
-
-
 
 // Signup routes
 app.get("/signup", (req, res) => {
@@ -207,8 +228,8 @@ app.get("/signup", (req, res) => {
 app.post("/user/signup", async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    console.log(req.body);
-    console.log(hashedPassword);
+    // console.log(req.body);
+    // console.log(hashedPassword);
     let user = req.body;
     user.password = hashedPassword;
 
@@ -230,7 +251,6 @@ app.post("/user/signup", async (req, res) => {
   }
 });
 
-
 // Login routes
 app.get("/login", (req, res) => {
   res.render("login.ejs");
@@ -238,74 +258,83 @@ app.get("/login", (req, res) => {
 
 app.post("/user/login", async (req, res) => {
   const username = req.body.username;
-    const password = req.body.password;
+  const password = req.body.password;
   try {
     queryLogin = `SELECT * FROM Users WHERE username = ? ;`;
-    connection.query(queryLogin,[username], async (errLogin, resultLogin) => {
+    connection.query(queryLogin, [username], async (errLogin, resultLogin) => {
       if (errLogin) {
         console.log(errLogin);
         // res.send("error with login");
-        return res.status(500).json({ success: false, message: 'An error occurred' });
+        return res
+          .status(500)
+          .json({ success: false, message: "An error occurred" });
       } else {
         if (resultLogin.length == 0) {
-          return res.status(404).json({ success: false, message: 'User not found' });
+          return res
+            .status(404)
+            .json({ success: false, message: "User not found" });
         } else {
-          console.log(resultLogin);
+          // console.log(resultLogin);
           let hashedPassword = resultLogin[0].PasswordHash;
           let isPasswordMatch = await bcrypt.compare(password, hashedPassword);
           if (isPasswordMatch) {
             // success in login
             let user = resultLogin[0];
-            console.log(user);
-            return res.status(200).json({ success: true, message: 'Authentication successful', user });
+            // console.log(user);
+            return res
+              .status(200)
+              .json({
+                success: true,
+                message: "Authentication successful",
+                user,
+              });
           } else {
-            res.status(401).json({ success: false, message: 'Incorrect password' });
+            res
+              .status(401)
+              .json({ success: false, message: "Incorrect password" });
           }
         }
       }
     });
-  } catch (err){
+  } catch (err) {
     console.log(err);
     res.redirect("/login");
   }
 });
 
-
 // about our website
-app.get("/about", (req,res) => {
+app.get("/about", (req, res) => {
   res.render("about.ejs");
 });
 
 // contact us route
 
-app.get("/contact", (req,res) => {
+app.get("/contact", (req, res) => {
   res.render("contact.ejs");
 });
 
-app.get("/getintouch", (req,res) => {
+app.get("/getintouch", (req, res) => {
   res.render("get-in-touch.ejs");
 });
 
-app.post("/getintouch/post",(req,res) => {
-  console.log(req.body);
+app.post("/getintouch/post", (req, res) => {
+  // console.log(req.body);
   let reviewPost = req.body;
   let query = `SELECT * FROM USERS WHERE emailid = ? ;`;
-  try {connection.query(query, [reviewPost.email],(err,results) => {
-    if(err) {
-      console.log(err);
-      res.send("Some errors happened please try again");
-    }
-    else {
-      console.log(results);
-    }
-  })} catch (err){
+  try {
+    connection.query(query, [reviewPost.email], (err, results) => {
+      if (err) {
+        console.log(err);
+        res.send("Some errors happened please try again");
+      } else {
+        // console.log(results);
+      }
+    });
+  } catch (err) {
     console.log(err);
     res.redirect("/getintouch");
   }
-  
 });
-
-
 
 app.listen(port, () => {
   console.log(`server listening to port ${port}`);
