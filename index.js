@@ -83,9 +83,10 @@ app.get("/products/view", (req,res) => {
 
 app.post("/cart", (req,res) => {
   console.log(req.body);
-    let userid = parseInt(req.body.userid);
+    let userid = parseInt(req.body.username);
+    console.log(userid);
     let query = 
-      "SELECT c.CartItemID, c.ProductID, c.UserID, p.PName, p.Price,p.imagePath, c.quantity FROM Cart c,Products p where c.productid = p.productid and c.userid=1;";
+      "SELECT c.CartItemID, c.ProductID, c.UserID, p.PName, p.Price,p.imagePath, c.quantity FROM Cart c,Products p where c.productid = p.productid and c.userid=?;";
     try {
       connection.query(query, [userid], (errCart, resultCart) => {
         if (errCart) {
@@ -105,7 +106,7 @@ app.post("/cart", (req,res) => {
 });
 
 app.post("/addtocart", (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   let query = "SELECT CartItemID, Quantity FROM Cart WHERE ProductID = ? AND UserID = ? ;";
   let details = [req.body.userid, req.body.productid];
   connection.query(query, details, (errItem, resItem) => {
@@ -113,8 +114,8 @@ app.post("/addtocart", (req, res) => {
           console.log(errItem);
           res.status(500).send("Internal Server Error");
       } else {
-          console.log(resItem);
-          if (resItem.length === 0) {
+          // console.log(resItem);
+          if (resItem.length == 0) {
               let queryAddCart = "INSERT INTO CART(UserID, ProductID, Quantity) VALUES (?,?,1);";
               connection.query(queryAddCart, details, (errAddCart, resAddCart) => {
                   if (errAddCart) {
@@ -122,7 +123,7 @@ app.post("/addtocart", (req, res) => {
                       res.status(500).send("Internal Server Error");
                   } else {
                       res.status(200).send("Added to cart");
-                      console.log("Added to cart");
+                      // console.log("Added to cart");
                   }
               });
           } else {
@@ -134,7 +135,7 @@ app.post("/addtocart", (req, res) => {
                       res.status(500).send("Internal Server Error");
                   } else {
                       res.status(200).send("Cart updated");
-                      console.log("Cart updated");
+                      // console.log("Cart updated");
                   }
               });
           }
@@ -145,9 +146,52 @@ app.post("/addtocart", (req, res) => {
 // checkout
 app.get("/checkout" , (req,res) => {
   console.log("you have enetered checkout section");
-  console.log(req.query);
-  return res.status(200).json({ success: true, message: 'checkedout sucessfully' });
+  // console.log(req.query); // { userid: '6' }
+  let user = parseInt(req.query.userid);
+  // console.log(user);
+  let cartQuery = "SELECT c.Quantity,p.Price FROM Cart c, Products p where c.ProductID = p.ProductID and c.UserID = ? ;";
+  connection.query(cartQuery,[user], (errCart,resCart) => {
+    if(errCart) {
+      console.log("error with database fetching cart: ",errCart);
+        return res.status(500).json({ success: false, message: 'Error in fetching the cart' });
+    } else {
+      // console.log(resCart);
+      // create a new order 
+      queryOrder="INSERT INTO Orders (UserID, OrderDate, OrderAmount, OrderStatus) VALUES (?, DATE_FORMAT(NOW(), '%Y%m%d'), ?, 'PLACED');";
+      console.log(calcTotal(resCart));
+      listOrder = [user,calcTotal(resCart)];
+      connection.query(queryOrder,listOrder, (errOrder,resOrder) => {
+        if(errOrder) {
+          console.log("Error in creating order: ",errOrder);
+          return res.status(500).json({ success: false, message: 'Error in placing Order' });
+        }
+        else {
+          console.log(resOrder);
+          console.log("ordercreated");
+          return res.status(200).json({ success: true, message: 'checked out successfully' });
+
+        }
+      });
+      
+    }
+  })  
+  
 });
+
+function calcTotal(cartItems) {
+  // console.log(cartItems);
+  let total = 0;
+  cartItems.forEach(item => {
+      // Convert price to integer
+      const price = parseInt(item.Price);
+      // console.log(`price is: ${price}`);
+      // Multiply price by quantity and add to total
+      // console.log(`quantity is: ${item.Quantity}`);
+      total += price * item.Quantity;
+  });
+  console.log(`total is: ${total}`);
+  return total;
+}
 
 app.get("/orderplaced",(req,res) => {
   res.render("orderSuccess.ejs");
