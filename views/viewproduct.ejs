@@ -33,6 +33,16 @@
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" media="screen">
       <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
       <link rel="stylesheet" href="./css/products.css">
+      <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="css/style.css">
+<link rel="stylesheet" href="css/responsive.css">
+<link rel="stylesheet" href="css/jquery.mCustomScrollbar.min.css">
+<link rel="stylesheet" href="css/owl.carousel.min.css">
+<link rel="stylesheet" href="css/owl.theme.default.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" media="screen">
+<link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="./css/products.css"> 
+
    </head>
    <body>
       <!-- header section start -->
@@ -71,9 +81,9 @@
            <span class="zoom-overlay"></span>
          </figure>
          <div class="product-info">
-           <p id="Category" style="margin: 20px 0 20px 0;">EyeShadow</p>
-           <h1 style="font-size:xx-large; font-weight:bold;">Huda Empowered Pallete</h1>
-           <h2 style="font-weight: bold;">Price: ₹5900</h2>
+           <p id="Category" style="margin: 20px 0 20px 0;"><%= item.Category %></p>
+           <h1 style="font-size:xx-large; font-weight:bold;"><%= item.PName %></h1>
+           <h2 style="font-weight: bold;">Price: <%= item.Price %></h2>
       
            <select id="shade-select">
              <option>Select Shade</option>
@@ -163,8 +173,6 @@
      </div>
   </div>
    <!-- product section end -->
-      <!-- product section end -->
-      <!-- footer section start -->
       <!-- footer section start -->
       <div class="footer_section layout_padding">
          <div class="container">

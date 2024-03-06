@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- Header section -->
+
+    <% if (user.imagePath !== null)  { %>
+    <img src="<%= user.imagePath %>" alt="this is demo image">
+    <% } else { %>
+        <img src="" alt="random user">
+    <% } %>
+
+    <h2><%= user.FirstName +" "+ user.LastName %></h2>
+    <h5>FirstName : <%= user.FirstName  %> </h5>
+    <h5>LastName : <%= user.LastName %></h5>
+    <h5>EmailID : <%= user.EmailID %></h5>
+    <h5>Username: <%= user.Username %></h5>
+    <h5>Phone: <%= user.Phone %></h5>
+    <h5>UserAddress: <%= user.UserAddress %></h5>
+
+    <% if (user.UserRole == 'ADMIN')  { %>
+    <h5>Access Admin Profile: <a href="/profile/admin"></a></h5>    
+    <% } %>
+    
+
+    <button onclick="logout()">Logout</button>
+    <button>Edit Profile</button>
+
+    <!-- footer section -->
+
+    <script>
+        function logout() {
+            localStorage.clear();
+            alert("You have been logged out successfully !!!");
+            setTimeout(function () {
+                window.location.href = "http://localhost:3000/home";
+            }, 3000);
+
+
+        }
+    </script>
+</body>
+
+</html>

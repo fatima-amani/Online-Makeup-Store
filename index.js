@@ -64,9 +64,7 @@ app.get("/products", (req, res) => {
       "SELECT productid, pname, price, category, quantityAvailable,imagePath FROM products WHERE MainCategory = ?;";
   }
 
-  connection.query(
-    queryProducts,
-    [queryString],
+  connection.query(queryProducts, [queryString],
     (errProducts, resultProducts) => {
       if (errProducts) {
         console.log(errProducts);
@@ -79,10 +77,25 @@ app.get("/products", (req, res) => {
   );
 });
 
-app.get("/products/view", (req, res) => {
-  const pid = req.query.pid;
-  console.log(pid);
-  res.render("viewproduct.ejs");
+app.get("/products/:id", (req, res) => {
+  const pid = req.params.id;
+  let query = "SELECT * FROM Products WHERE ProductID = ?; ";
+  try {
+    connection.query(query,[pid],(errProd,resProd)=> {
+      if(errProd) {
+        console.log(errProd);
+        res.redirect("/products");
+      } else {
+        console.log(resProd);
+        res.render("viewproduct.ejs",{item : resProd});
+      }
+    });
+  }
+  catch(error) {
+    console.log(error);
+    res.redirect("/products");
+  }
+  
 });
 
 app.post("/cart", (req, res) => {
@@ -95,10 +108,9 @@ app.post("/cart", (req, res) => {
     connection.query(query, [userid], (errCart, resultCart) => {
       if (errCart) {
         console.log(errCart);
-        res.send("some error with database");
+        res.redirect("/login?alert=kindly login to access cart!!");
       } else {
         // console.log(resultCart);
-        // if(resultCart == 0)
         res.render("cart.ejs", { cartItems: resultCart });
       }
     });
@@ -300,6 +312,29 @@ app.post("/user/login", async (req, res) => {
     console.log(err);
     res.redirect("/login");
   }
+});
+
+// profile
+app.get("/profile",(req,res) => {
+  let userid = 1;
+  queryProfile = `SELECT * FROM Users WHERE userid = ? ;`;
+  try {
+    connection.query(queryProfile,[userid],(errProfile,resProfile) => {
+      if(errProfile) {
+        console.log("some error with database",errProfile);
+        res.redirect("/home");
+      }
+      else {
+        // console.log(resProfile);
+        res.render("profile.ejs",{user : resProfile[0]});
+      }
+    });
+  } catch {
+    console.log("some error occurred with accessing profile");
+    res.redirect("/home");
+  }
+
+  
 });
 
 // about our website

@@ -46,6 +46,7 @@
             <div id="mySidenav" class="sidenav">
                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
                <a href="http://localhost:3000/home">Home</a>
+               <a href="http://localhost:3000/products">Our Products</a>
                <a href="http://localhost:3000/products?category=makeup">Make-Up</a>
                <a href="http://localhost:3000/products?category=skincare">Skin-Care</a>
                <a href="http://localhost:3000/cart">Cart</a>
@@ -353,7 +354,7 @@
       }
    </script>
    <script>
-      document.addEventListener('DOMContentLoaded', function () {
+            document.addEventListener('DOMContentLoaded', function () {
          var usernameInput = document.getElementById('username');
          if (usernameInput) {
             var userID = parseInt(localStorage.getItem("UserID"));
