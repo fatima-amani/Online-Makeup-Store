@@ -7,6 +7,10 @@ const path = require("path");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
+// payment gateway
+const Razorpay = require('razorpay');
+const crypto = require('crypto');
+
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
@@ -23,6 +27,12 @@ const connection = mysql.createConnection({
   database: "GlamSphereDB",
   password: "sql123",
   port: "3306",
+});
+
+// Payment gateway credentials
+const razorpayInstance = new Razorpay({
+  key_id: "rzp_test_ztvlLbwUAdGqVu",
+  key_secret: "5IjfLUpFShSzIUN0rSEq6q2V"
 });
 
 app.get("/home", (req, res) => {
@@ -369,6 +379,54 @@ app.post("/getintouch/post", (req, res) => {
     console.log(err);
     res.redirect("/getintouch");
   }
+});
+
+// payment gateway routes
+
+app.post('/createOrder', (req, res)=>{  
+  
+  // STEP 1: 
+  const {amount,currency,receipt, notes}  = req.body;       
+        
+  // STEP 2:     
+  razorpayInstance.orders.create({amount, currency, receipt, notes},  
+      (err, order)=>{ 
+        
+        //STEP 3 & 4:  
+        if(!err) 
+          res.json(order) 
+        else
+          res.send(err); 
+      } 
+  ) 
+}); 
+
+app.post('/verifyOrder',  (req, res)=>{  
+      
+    // STEP 7: Receive Payment Data 
+    const {order_id, payment_id} = req.body;      
+    const razorpay_signature =  req.headers['x-razorpay-signature']; 
+  
+    // Pass yours key_secret here 
+    const key_secret = "5IjfLUpFShSzIUN0rSEq6q2V";      
+  
+    // STEP 8: Verification & Send Response to User 
+      
+    // Creating hmac object  
+    let hmac = crypto.createHmac('sha256', key_secret);  
+  
+    // Passing the data to be hashed 
+    hmac.update(order_id + "|" + payment_id); 
+      
+    // Creating the hmac in the required format 
+    const generated_signature = hmac.digest('hex'); 
+      
+      
+    if(razorpay_signature===generated_signature){ 
+        res.json({success:true, message:"Payment has been verified"}) 
+    } 
+    else
+    res.json({success:false, message:"Payment verification failed"}) 
 });
 
 app.listen(port, () => {
