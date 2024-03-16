@@ -8,14 +8,15 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 // payment gateway
-const Razorpay = require('razorpay');
-const crypto = require('crypto');
+const Razorpay = require("razorpay");
+const crypto = require("crypto");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
-app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 
 // mysql2
 const mysql = require("mysql2");
@@ -32,7 +33,7 @@ const connection = mysql.createConnection({
 // Payment gateway credentials
 const razorpayInstance = new Razorpay({
   key_id: "rzp_test_ztvlLbwUAdGqVu",
-  key_secret: "5IjfLUpFShSzIUN0rSEq6q2V"
+  key_secret: "5IjfLUpFShSzIUN0rSEq6q2V",
 });
 
 app.get("/home", (req, res) => {
@@ -74,7 +75,9 @@ app.get("/products", (req, res) => {
       "SELECT productid, pname, price, category, quantityAvailable,imagePath FROM products WHERE MainCategory = ?;";
   }
 
-  connection.query(queryProducts, [queryString],
+  connection.query(
+    queryProducts,
+    [queryString],
     (errProducts, resultProducts) => {
       if (errProducts) {
         console.log(errProducts);
@@ -91,21 +94,19 @@ app.get("/products/:id", (req, res) => {
   const pid = req.params.id;
   let query = "SELECT * FROM Products WHERE ProductID = ?; ";
   try {
-    connection.query(query,[pid],(errProd,resProd)=> {
-      if(errProd) {
+    connection.query(query, [pid], (errProd, resProd) => {
+      if (errProd) {
         console.log(errProd);
         res.redirect("/products");
       } else {
         console.log(resProd);
-        res.render("viewproduct.ejs",{item : resProd});
+        res.render("viewproduct.ejs", { item: resProd });
       }
     });
-  }
-  catch(error) {
+  } catch (error) {
     console.log(error);
     res.redirect("/products");
   }
-  
 });
 
 app.post("/cart", (req, res) => {
@@ -179,8 +180,10 @@ app.post("/addtocart", (req, res) => {
 app.get("/checkout", (req, res) => {
   // console.log("you have enetered checkout section");
   // console.log(req.query); // { userid: '6' }
+
   let user = parseInt(req.query.userid);
   // console.log(user);
+
   let cartQuery =
     "SELECT c.Quantity,p.Price FROM Cart c, Products p where c.ProductID = p.ProductID and c.UserID = ? ;";
   connection.query(cartQuery, [user], (errCart, resCart) => {
@@ -195,7 +198,8 @@ app.get("/checkout", (req, res) => {
       queryOrder =
         "INSERT INTO Orders (UserID, OrderDate, OrderAmount, OrderStatus) VALUES (?, DATE_FORMAT(NOW(), '%Y%m%d'), ?, 'PLACED');";
       // console.log(calcTotal(resCart));
-      listOrder = [user, calcTotal(resCart)];
+      let totalAmount = calcTotal(resCart);
+      listOrder = [user, totalAmount];
       connection.query(queryOrder, listOrder, (errOrder, resOrder) => {
         if (errOrder) {
           console.log("Error in creating order: ", errOrder);
@@ -203,18 +207,101 @@ app.get("/checkout", (req, res) => {
             .status(500)
             .json({ success: false, message: "Error in placing Order" });
         } else {
-          // console.log(resOrder);
-          console.log("ordercreated");
-          clearCart(user);
-          return res
-            .status(200)
-            .json({ success: true, message: "checked out successfully" });
+          connection.query(
+            "SELECT OrderID FROM Orders ORDER BY orderID DESC LIMIT 1;",
+            (errOrderNum, resOrderNum) => {
+              if (errOrder) {
+                console.log("Error in creating order: ", errOrderNum);
+                return res
+                  .status(500)
+                  .json({ success: false, message: "Error in placing Order" });
+              } else {
+                let receiptNum = resOrderNum[0].OrderID;
+                let RpOrder = {
+                  amount: (totalAmount * 100).toString(),
+                  currency: "INR",
+                  receipt: receiptNum.toString(),
+                  notes: {
+                    description: "Makeup from Glamsphere",
+                  },
+                };
+
+                razorpayInstance.orders.create(RpOrder, (err, order) => {
+                  if (!err) {
+                    clearCart(user);
+                    // console.log(order);
+                    return res.status(200).json({
+                      success: true,
+                      message: "checked out successfully",
+                      myOrder: order,
+                    });
+                  } else {
+                    return res.status(500).json({
+                      success: false,
+                      message: "Error in placing Order",
+                    });
+                  }
+                });
+              }
+            }
+          );
         }
       });
     }
   });
 });
 
+// payment gateway routes
+
+app.post("/verifyOrder", (req, res) => {
+  console.log("entered verifyOrder");
+  // STEP 7: Receive Payment Data
+  const { order_id, payment_id, OrderID,} = req.body;
+  const razorpay_signature = req.headers["x-razorpay-signature"];
+
+  // Pass yours key_secret here
+  const key_secret = "5IjfLUpFShSzIUN0rSEq6q2V";
+
+  // STEP 8: Verification & Send Response to User
+
+  // Creating hmac object
+  let hmac = crypto.createHmac("sha256", key_secret);
+
+  // Passing the data to be hashed
+  hmac.update(order_id + "|" + payment_id);
+
+  // Creating the hmac in the required format
+  const generated_signature = hmac.digest("hex");
+
+  if (razorpay_signature == generated_signature) {
+
+    modifyOrder(OrderID,'PAID');
+    res.json({ success: true, message: "Payment has been verified" });
+  } else {
+    res.json({ success: false, message: "Payment verification failed" });
+  }
+});
+
+app.post("/cancelOrder", (req, res) => {
+  modifyOrder(req.body.OrderID,'CANCELLED');
+  res.json({ success: true, message: "Order Cancelled !" });
+});
+
+app.get('/orderfailed',(req,res) => {
+  res.render('orderFail.ejs');
+})
+
+function modifyOrder(OrderID,status) {
+  query = "UPDATE Orders SET OrderStatus=? WHERE OrderID=?; "
+  connection.query(query,[status,OrderID], (err,res) => {
+    if(err) {
+      console.log(err);
+    }
+    else {
+      // console.log(res);
+    }
+  })
+}
 function calcTotal(cartItems) {
   let total = 0;
   cartItems.forEach((item) => {
@@ -225,15 +312,17 @@ function calcTotal(cartItems) {
   return total;
 }
 
-function clearCart(user){
-  let query = 'DELETE FROM Cart WHERE UserID = ?;';
-   try {connection.query(query,[user],(err,res) => {
-    if(err) {
-      console.log(err);
-    } else {
-      console.log("successfully clear cart for userid ",user);
-    }
-  })} catch(error) {
+function clearCart(user) {
+  let query = "DELETE FROM Cart WHERE UserID = ?;";
+  try {
+    connection.query(query, [user], (err, res) => {
+      if (err) {
+        console.log(err);
+      } else {
+        // console.log("successfully clear cart for userid ", user);
+      }
+    });
+  } catch (error) {
     console.log(error);
   }
 }
@@ -303,13 +392,11 @@ app.post("/user/login", async (req, res) => {
             // success in login
             let user = resultLogin[0];
             // console.log(user);
-            return res
-              .status(200)
-              .json({
-                success: true,
-                message: "Authentication successful",
-                user,
-              });
+            return res.status(200).json({
+              success: true,
+              message: "Authentication successful",
+              user,
+            });
           } else {
             res
               .status(401)
@@ -325,26 +412,23 @@ app.post("/user/login", async (req, res) => {
 });
 
 // profile
-app.get("/profile",(req,res) => {
+app.get("/profile", (req, res) => {
   let userid = 1;
   queryProfile = `SELECT * FROM Users WHERE userid = ? ;`;
   try {
-    connection.query(queryProfile,[userid],(errProfile,resProfile) => {
-      if(errProfile) {
-        console.log("some error with database",errProfile);
+    connection.query(queryProfile, [userid], (errProfile, resProfile) => {
+      if (errProfile) {
+        console.log("some error with database", errProfile);
         res.redirect("/home");
-      }
-      else {
+      } else {
         // console.log(resProfile);
-        res.render("profile.ejs",{user : resProfile[0]});
+        res.render("profile.ejs", { user: resProfile[0] });
       }
     });
   } catch {
     console.log("some error occurred with accessing profile");
     res.redirect("/home");
   }
-
-  
 });
 
 // about our website
@@ -379,54 +463,6 @@ app.post("/getintouch/post", (req, res) => {
     console.log(err);
     res.redirect("/getintouch");
   }
-});
-
-// payment gateway routes
-
-app.post('/createOrder', (req, res)=>{  
-  
-  // STEP 1: 
-  const {amount,currency,receipt, notes}  = req.body;       
-        
-  // STEP 2:     
-  razorpayInstance.orders.create({amount, currency, receipt, notes},  
-      (err, order)=>{ 
-        
-        //STEP 3 & 4:  
-        if(!err) 
-          res.json(order) 
-        else
-          res.send(err); 
-      } 
-  ) 
-}); 
-
-app.post('/verifyOrder',  (req, res)=>{  
-      
-    // STEP 7: Receive Payment Data 
-    const {order_id, payment_id} = req.body;      
-    const razorpay_signature =  req.headers['x-razorpay-signature']; 
-  
-    // Pass yours key_secret here 
-    const key_secret = "5IjfLUpFShSzIUN0rSEq6q2V";      
-  
-    // STEP 8: Verification & Send Response to User 
-      
-    // Creating hmac object  
-    let hmac = crypto.createHmac('sha256', key_secret);  
-  
-    // Passing the data to be hashed 
-    hmac.update(order_id + "|" + payment_id); 
-      
-    // Creating the hmac in the required format 
-    const generated_signature = hmac.digest('hex'); 
-      
-      
-    if(razorpay_signature===generated_signature){ 
-        res.json({success:true, message:"Payment has been verified"}) 
-    } 
-    else
-    res.json({success:false, message:"Payment verification failed"}) 
 });
 
 app.listen(port, () => {

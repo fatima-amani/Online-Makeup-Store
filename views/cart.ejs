@@ -76,17 +76,17 @@
          <% if (cartItems.length==0) { %>
             <h2>NO ITEMS IN CART !! Shop here <a href="http://localhost:3000/products">here</a></h2>
             <% } else { %>
-         <table class="cart-table">
-            <thead>
-               <tr>
-                  <th>Product</th>
-                  <th>Quantity</th>
-                  <th>Subtotal</th>
-               </tr>
-            </thead>
-            <tbody>
-               <tr>
-                  <% for (let item of cartItems) { %>
+               <table class="cart-table">
+                  <thead>
+                     <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Subtotal</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <% for (let item of cartItems) { %>
                            <td>
                               <div class="cart-info">
                                  <img class="cart-image" src="<%= item.imagePath %>">
@@ -108,17 +108,17 @@
                               <%= item.Price * item.quantity %>
                            </td>
                            <% } %>
-                             
-               </tr>
 
-            </tbody>
-         </table>
-         <% } %>
+                     </tr>
 
-         <div class="checkout-section">
-            <div class="btn"><a href="http://localhost:3000/home">Continue Shopping</a></div>
-            <div class="btn"><button onclick="checkout()">Checkout</button></div>
-         </div>
+                  </tbody>
+               </table>
+               <% } %>
+
+                  <div class="checkout-section">
+                     <div class="btn"><a href="http://localhost:3000/home">Continue Shopping</a></div>
+                     <div class="btn"><button onclick="checkout()">Checkout</button></div>
+                  </div>
       </div>
    </section>
    <!-- customer section end -->
@@ -206,6 +206,7 @@
    <script src="js/owl.carousel.js"></script>
    <script src="https:cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
    <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
    <script>
       function openNav() {
          document.getElementById("mySidenav").style.width = "100%";
@@ -215,35 +216,12 @@
          document.getElementById("mySidenav").style.width = "0";
       }
 
-      //   function loadMore(){
-      //       let loadMoreBtn = document.querySelector('.seemore_bt'); // Corrected selector
-      //       let currentItem = 12;
-
-      //       loadMoreBtn.onclick = () => {
-      //           let boxes = document.querySelectorAll('.product_box'); // Corrected selector
-      //           boxes = Array.from(boxes); // Convert NodeList to Array
-
-      //           for (let i = currentItem; i < currentItem + 4 && i < boxes.length; i++) {
-      //               boxes[i].style.display = "inline-block";
-      //           }
-
-      //           currentItem += 4;
-
-      //           if (currentItem >= boxes.length) {
-      //               loadMoreBtn.style.display = "none";
-      //           }
-      //       }
-      //   }
-
-      //   // Call the function when the page loads
-      //   window.onload = loadMore;
 
       function checkout() {
-         // Specify the URL and query string
          const url = "http://localhost:3000/checkout";
          let userid = parseInt(localStorage.getItem("UserID"));
 
-         const queryString = `userid=${userid}`; 
+         const queryString = `userid=${userid}`;
 
          // Create the full URL with the query string
          const fullUrl = `${url}?${queryString}`;
@@ -257,8 +235,50 @@
                return response.json(); // Assuming the response is JSON
             })
             .then(data => {
-               if(data.success == true) {
-                  window.location.href = "http://localhost:3000/orderplaced";
+               if (data.success == true) {
+
+                  let myOrder = data.myOrder;
+
+
+                  var options = {
+                     "key": "rzp_test_ztvlLbwUAdGqVu",
+                     "amount": myOrder.amount.toString(),
+                     "currency": "INR",
+                     "name": "GlamSphere",
+                     "description": "Pay & Checkout your Favourite Beauty Products !!",
+                     "image": "https://media.geeksforgeeks.org/wp-content/uploads/20210806114908/dummy-200x200.png",
+                     "order_id": myOrder.id,
+                     "handler": function (response2) {
+                        console.log(response2);
+                        alert("This step of Payment Succeeded");
+                        success(response2, myOrder.receipt);
+                     },
+                     "prefill": {
+                        "contact": localStorage.getItem('Phone').toString(),
+                        // Name and email ID for checkout
+                        "name": localStorage.getItem('FirstName'),
+                        "email": localStorage.getItem('EmailID')
+
+                     },
+                     "notes": myOrder.notes,
+                     "theme": {
+                        "color": "#2300a3"
+                     }
+                  };
+                  var razorpayObject = new Razorpay(options);
+                  console.log(razorpayObject);
+                  razorpayObject.on('payment.failed', function (response) {
+                     console.log(response);
+                     if (response.error.reason == "payment_failed") {
+                        alert("This step of Payment Failed");
+                        failure(response, myOrder.receipt);
+                        window.location.href = "http://localhost:3000/orderfailed";
+                     }
+                  });
+
+                  razorpayObject.open();
+
+
                }
             })
             .catch(error => {
@@ -268,6 +288,98 @@
       }
 
 
+      function success(response, oid) {
+         console.log("inside success");
+
+         const url = 'http://localhost:3000/verifyOrder';
+
+         // Request body data 
+         const requestBody = {
+            'order_id': response['razorpay_order_id'],
+            'payment_id': response['razorpay_payment_id'],
+            'OrderID': oid
+
+         };
+
+         // Request headers
+         const headers = {
+            'Content-Type': 'application/json',
+            "x-razorpay-signature": response.razorpay_signature
+         };
+
+         // Fetch options
+         const options = {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(requestBody)
+         };
+
+         // Making the POST request
+         fetch(url, options)
+            .then(response => {
+               if (!response.ok) {
+                  throw new Error('Request failed with status ' + response.status);
+               }
+               return response.json();
+            })
+            .then(data => {
+               if (data.success == true) {
+                  console.log("inside payment good")
+                  window.location.href = "http://localhost:3000/orderplaced";
+               } else {
+                  alert('payment verification failed');
+               }
+            })
+            .catch(error => {
+               console.error('Error:', error);
+               alert('Payment Failed, please try again later'); 
+               setTimeout(() => {
+                  window.location.href = "http://localhost:3000/home";
+               }, 3000); 
+
+            });
+
+      }
+
+      function failure(response, Order_id) {
+         // URL to which the POST request will be sent
+         const url = 'http://localhost:3000/cancelOrder';
+
+         // Request body data (assuming it's JSON)
+         const requestBody = {
+            OrderID: Order_id,
+         };
+
+
+         const options = {
+            method: 'POST',
+            headers : {
+               'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody)
+         };
+
+         fetch(url, options)
+            .then(response => {
+               if (!response.ok) {
+                  throw new Error('Request failed with status ' + response.status);
+               }
+            })
+            .then(data => {
+               if (data.success == true) {
+                  
+               }
+               
+            })
+            .catch(error => {
+               console.error('Error:', error);
+               alert = 'Some error occured, plese try again later';
+               
+            });
+
+      }
+
    </script>
 </body>
+
 </html>
