@@ -100,7 +100,7 @@ app.get("/products/:id", (req, res) => {
         res.redirect("/products");
       } else {
         console.log(resProd);
-        res.render("viewproduct.ejs", { item: resProd });
+        res.render("viewproduct.ejs", { item: resProd[0] });
       }
     });
   } catch (error) {

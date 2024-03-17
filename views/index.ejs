@@ -82,7 +82,7 @@
                      <div class="col-sm-6">
                         <h1 class="banner_taital">GlamSphere's <br>Best</h1>
                         <p class="banner_text">Discover the transformative power of our makeup products, where every brushstroke brings out your inner radiance and confidence, ensuring you shine from within</p>
-                        <div class="read_bt"><a href="#">Buy Now</a></div>
+                        <div class="read_bt"><a href="http://localhost:3000/products">Buy Now</a></div>
                      </div>
                      <div class="col-sm-6">
                         <div class="banner_img"><img src="images/banner-img.png"></div>
@@ -96,7 +96,7 @@
                      <div class="col-sm-6">
                         <h1 class="banner_taital">Best in <br>Make-Up</h1>
                         <p class="banner_text">Discover the transformative power of our makeup products, where every brushstroke brings out your inner radiance and confidence, ensuring you shine from within</p>
-                        <div class="read_bt"><a href="#">Buy Now</a></div>
+                        <div class="read_bt"><a href="http://localhost:3000/products?category=makeup">Buy Now</a></div>
                      </div>
                      <div class="col-sm-6">
                         <div class="banner_img"><img src="images/banner-img.png"></div>
@@ -110,7 +110,7 @@
                      <div class="col-sm-6">
                         <h1 class="banner_taital">Best in <br>SkinCare</h1>
                         <p class="banner_text">Discover the transformative power of our makeup products, where every brushstroke brings out your inner radiance and confidence, ensuring you shine from within</p>
-                        <div class="read_bt"><a href="#">Buy Now</a></div>
+                        <div class="read_bt"><a href="http://localhost:3000/products?category=skincare">Buy Now</a></div>
                      </div>
                      <div class="col-sm-6">
                         <div class="banner_img"><img src="images/banner-img.png"></div>
@@ -124,7 +124,7 @@
                      <div class="col-sm-6">
                         <h1 class="banner_taital">Beauty <br>Kit</h1>
                         <p class="banner_text">Elevate your beauty effortlessly with our makeup essentials, tailored to bring out your best self in every moment</p>
-                        <div class="read_bt"><a href="#">Buy Now</a></div>
+                        <div class="read_bt"><a href="http://localhost:3000/products?category=makeup">Buy Now</a></div>
                      </div>
                      <div class="col-sm-6">
                         <div class="banner_img"><img src="images/banner-img.png"></div>
@@ -150,13 +150,15 @@
                <% products.forEach((product)=> { %>
                   <div class="col-lg-3 col-sm-6">
                      <div class="product_box">
-                        <h4 class="product_name">
-                           <%= product.pname %>
-                        </h4>
-                        <p class="product_description">
-                           <%= product.category %>
-                        </p>
-                        <img src="<%= product.imagePath %>" class="image_1">
+                        <a href="http://localhost:3000/products/<%= product.productid %>">
+                           <h4 class="product_name">
+                              <%= product.pname %>
+                           </h4>
+                           <p class="product_description">
+                              <%= product.category %>
+                           </p>
+                           <img src="<%= product.imagePath %>" class="image_1">
+                        </a>
                         <div class="btn_main">
                            <div class="buy_bt">
                               <ul>
@@ -185,7 +187,7 @@
             <div class="row">
                <div class="col-md-6">
                   <div class="about_taital_main">
-                     <h1 class="about_taital">About Our beauty sotore</h1>
+                     <h1 class="about_taital">About Our beauty store</h1>
                      <p class="about_text">GlamSphere is your go-to hub for all things beauty, offering an expansive array of skincare solutions, makeup essentials, and expert advice. Our platform is designed to inspire and empower individuals to explore and embrace their unique beauty journeys. Whether you're a beauty novice or a seasoned pro, GlamSphere provides curated content and top-quality products to help you express your style with confidence. Join us and elevate your beauty routine to new heights.</p>
                      <!-- <div class="readmore_bt"><a href="#">Read More</a></div> -->
                   </div>
@@ -238,13 +240,12 @@
       </div>
    </div>
    <!-- contact section start -->
-   <div class="contact_section layout_padding">
+   <div class="contact_section layout_padding" style="padding-bottom: 50px;">
       <div class="container">
          <div class="row">
             <div class="col-md-6">
                <h1 class="contact_taital">Get In Touch</h1>
-               <p class="contact_text">Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-                  magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation eu </p>
+               <p class="contact_text">Contact us and get all your queries answered. </p>
             </div>
             <div class="col-md-6">
                <div class="contact_main">
@@ -293,14 +294,13 @@
                   </div>
                </div>
                <div class="col-sm-4">
-                  <div class="footer_logo_1"><a href="index.html"><img src="./images/image.png"></a></div>
-                  <p class="dummy_text">commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
-                     esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non</p>
+                  <div class="footer_logo_1"><a href="http://localhost:3000/home"><img src="./images/image.png"></a></div>
+                  <p class="dummy_text">Your go-to hub for all things beauty.</p>
                </div>
                <div class="col-sm-4">
                   <div class="main">
                      <h3 class="address_text">Best Products</h3>
-                     <p class="ipsum_text">Product no 1 Product no 2 Product no 3 Product no 4</p>
+                     <p class="ipsum_text">Sunscreen <br>Lipsticks <br>Lip Balm <br> Eye Shadow </p>
                   </div>
                </div>
             </div>
@@ -308,16 +308,16 @@
          <div class="social_icon">
             <ul>
                <li>
-                  <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                  <a href="https://www.facebook.com/"><i class="fa fa-facebook" aria-hidden="true"></i></a>
                </li>
                <li>
-                  <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                  <a href="https://twitter.com/"><i class="fa fa-twitter" aria-hidden="true"></i></a>
                </li>
                <li>
-                  <a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+                  <a href="https://www.youtube.com/@fatimadoesthemakeup"><i class="fa fa-youtube" aria-hidden="true"></i></a>
                </li>
                <li>
-                  <a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                  <a href="https://www.instagram.com/fatimadoesthemakeup/"><i class="fa fa-instagram" aria-hidden="true"></i></a>
                </li>
             </ul>
          </div>
@@ -327,7 +327,7 @@
    <!-- copyright section start -->
    <div class="copyright_section">
       <div class="container">
-         <p class="copyright_text">2020 All Rights Reserved. <a href="https://html.design"></a></p>
+         <p class="copyright_text">&#169; 2024 All Rights Reserved. <a href="https://html.design"></a></p>
       </div>
    </div>
    <!-- copyright section end -->
