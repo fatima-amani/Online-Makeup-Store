@@ -10,6 +10,10 @@ const jwt = require("jsonwebtoken");
 // payment gateway
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
+// const { default: items } = require("razorpay/dist/types/items");
+
+
+
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -17,10 +21,10 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
 // mysql2
 const mysql = require("mysql2");
 const { error } = require("console");
+
 
 const connection = mysql.createConnection({
   host: "localhost",
@@ -99,8 +103,8 @@ app.get("/products/:id", (req, res) => {
         console.log(errProd);
         res.redirect("/products");
       } else {
-        console.log(resProd);
-        res.render("viewproduct.ejs", { item: resProd[0] });
+        console.log(resProd[0]);
+        res.render("viewProduct.ejs", { item: resProd[0] });
       }
     });
   } catch (error) {
@@ -185,7 +189,7 @@ app.get("/checkout", (req, res) => {
   // console.log(user);
 
   let cartQuery =
-    "SELECT c.Quantity,p.Price FROM Cart c, Products p where c.ProductID = p.ProductID and c.UserID = ? ;";
+    "SELECT c.ProductID,c.Quantity,p.Price FROM Cart c, Products p where c.ProductID = p.ProductID and c.UserID = ? ;";
   connection.query(cartQuery, [user], (errCart, resCart) => {
     if (errCart) {
       console.log("error with database fetching cart: ", errCart);
@@ -216,6 +220,7 @@ app.get("/checkout", (req, res) => {
                   .status(500)
                   .json({ success: false, message: "Error in placing Order" });
               } else {
+                
                 let receiptNum = resOrderNum[0].OrderID;
                 let RpOrder = {
                   amount: (totalAmount * 100).toString(),
@@ -228,6 +233,7 @@ app.get("/checkout", (req, res) => {
 
                 razorpayInstance.orders.create(RpOrder, (err, order) => {
                   if (!err) {
+                    createOrderDetail(user,receiptNum,resCart);
                     clearCart(user);
                     // console.log(order);
                     return res.status(200).json({
@@ -251,12 +257,32 @@ app.get("/checkout", (req, res) => {
   });
 });
 
+function createOrderDetail(user,orderID,cart) {
+  console.log('cart is: ',cart);
+  console.log(orderID);
+  // INSERT INTO OrderDetail (OrderID, ProductID, Quantity, Subtotal)
+  query = "INSERT INTO OrderDetail (OrderID, ProductID, Quantity, Subtotal) VALUES(?, ?,?,?);";
+  for(item of cart) {
+    details = [parseInt(orderID), item.ProductID, item.Quantity, (parseFloat(item.Price)*item.Quantity)];
+    console.log(details);
+    connection.query(query,details, (err,res) => {
+      if(err) {
+        console.log("error in entering Order Details: ",err);
+      }
+      else{
+        console.log("success in entering order details");
+      }
+    });
+  }
+
+}
+
 // payment gateway routes
 
 app.post("/verifyOrder", (req, res) => {
   console.log("entered verifyOrder");
   // STEP 7: Receive Payment Data
-  const { order_id, payment_id, OrderID,} = req.body;
+  const { order_id, payment_id, OrderID } = req.body;
   const razorpay_signature = req.headers["x-razorpay-signature"];
 
   // Pass yours key_secret here
@@ -274,8 +300,7 @@ app.post("/verifyOrder", (req, res) => {
   const generated_signature = hmac.digest("hex");
 
   if (razorpay_signature == generated_signature) {
-
-    modifyOrder(OrderID,'PAID');
+    modifyOrder(OrderID, "PAID");
     res.json({ success: true, message: "Payment has been verified" });
   } else {
     res.json({ success: false, message: "Payment verification failed" });
@@ -283,24 +308,23 @@ app.post("/verifyOrder", (req, res) => {
 });
 
 app.post("/cancelOrder", (req, res) => {
-  modifyOrder(req.body.OrderID,'CANCELLED');
+  modifyOrder(req.body.OrderID, "CANCELLED");
   res.json({ success: true, message: "Order Cancelled !" });
 });
 
-app.get('/orderfailed',(req,res) => {
-  res.render('orderFail.ejs');
-})
+app.get("/orderfailed", (req, res) => {
+  res.render("orderFail.ejs");
+});
 
-function modifyOrder(OrderID,status) {
-  query = "UPDATE Orders SET OrderStatus=? WHERE OrderID=?; "
-  connection.query(query,[status,OrderID], (err,res) => {
-    if(err) {
+function modifyOrder(OrderID, status) {
+  query = "UPDATE Orders SET OrderStatus=? WHERE OrderID=?; ";
+  connection.query(query, [status, OrderID], (err, res) => {
+    if (err) {
       console.log(err);
-    }
-    else {
+    } else {
       // console.log(res);
     }
-  })
+  });
 }
 function calcTotal(cartItems) {
   let total = 0;
@@ -412,22 +436,30 @@ app.post("/user/login", async (req, res) => {
 });
 
 // profile
-app.get("/profile", (req, res) => {
-  let userid = 1;
-  queryProfile = `SELECT * FROM Users WHERE userid = ? ;`;
-  try {
-    connection.query(queryProfile, [userid], (errProfile, resProfile) => {
-      if (errProfile) {
-        console.log("some error with database", errProfile);
-        res.redirect("/home");
-      } else {
-        // console.log(resProfile);
-        res.render("profile.ejs", { user: resProfile[0] });
-      }
-    });
-  } catch {
-    console.log("some error occurred with accessing profile");
-    res.redirect("/home");
+app.post("/profile", (req, res) => {
+  let userid = req.body.username;
+  if (userid == "") {
+    res.redirect("/login?alert=kindly login to access profile!!");
+  } else {
+    queryProfile = `SELECT * FROM Users WHERE userid = ? ;`;
+    try {
+      connection.query(
+        queryProfile,
+        [parseInt(userid)],
+        (errProfile, resProfile) => {
+          if (errProfile) {
+            console.log("some error with database", errProfile);
+            res.redirect("/home");
+          } else {
+            // console.log(resProfile);
+            res.render("profile.ejs", { user: resProfile[0] });
+          }
+        }
+      );
+    } catch {
+      console.log("some error occurred with accessing profile");
+      res.redirect("/home");
+    }
   }
 });
 

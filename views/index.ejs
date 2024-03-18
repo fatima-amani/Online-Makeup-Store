@@ -58,7 +58,12 @@
             <div class="form-inline ">
                <div class="login_text">
                   <ul>
-                     <li><a href="http://localhost:3000/profile"><img src="images/user-icon.png"></a></li>
+                     <li>
+                        <form id="profileForm" method="POST" action="http://localhost:3000/profile">
+                           <input type="number" id="usernameP" name="username" style="display: none;">
+                           <button><img src="images/user-icon.png"></button>
+                        </form>
+                     </li>
                      <li>
                         <form id="cartForm" method="POST" action="http://localhost:3000/cart">
                            <input type="number" id="username" name="username" style="display: none;">
@@ -67,7 +72,6 @@
                      </li>
                   </ul>
                </div>
-            </form>
          </nav>
       </div>
    </div>
@@ -81,7 +85,8 @@
                   <div class="row">
                      <div class="col-sm-6">
                         <h1 class="banner_taital">GlamSphere's <br>Best</h1>
-                        <p class="banner_text">Discover the transformative power of our makeup products, where every brushstroke brings out your inner radiance and confidence, ensuring you shine from within</p>
+                        <p class="banner_text">Discover the transformative power of our makeup products, where every
+                           brushstroke brings out your inner radiance and confidence, ensuring you shine from within</p>
                         <div class="read_bt"><a href="http://localhost:3000/products">Buy Now</a></div>
                      </div>
                      <div class="col-sm-6">
@@ -95,7 +100,8 @@
                   <div class="row">
                      <div class="col-sm-6">
                         <h1 class="banner_taital">Best in <br>Make-Up</h1>
-                        <p class="banner_text">Discover the transformative power of our makeup products, where every brushstroke brings out your inner radiance and confidence, ensuring you shine from within</p>
+                        <p class="banner_text">Discover the transformative power of our makeup products, where every
+                           brushstroke brings out your inner radiance and confidence, ensuring you shine from within</p>
                         <div class="read_bt"><a href="http://localhost:3000/products?category=makeup">Buy Now</a></div>
                      </div>
                      <div class="col-sm-6">
@@ -109,8 +115,10 @@
                   <div class="row">
                      <div class="col-sm-6">
                         <h1 class="banner_taital">Best in <br>SkinCare</h1>
-                        <p class="banner_text">Discover the transformative power of our makeup products, where every brushstroke brings out your inner radiance and confidence, ensuring you shine from within</p>
-                        <div class="read_bt"><a href="http://localhost:3000/products?category=skincare">Buy Now</a></div>
+                        <p class="banner_text">Discover the transformative power of our makeup products, where every
+                           brushstroke brings out your inner radiance and confidence, ensuring you shine from within</p>
+                        <div class="read_bt"><a href="http://localhost:3000/products?category=skincare">Buy Now</a>
+                        </div>
                      </div>
                      <div class="col-sm-6">
                         <div class="banner_img"><img src="images/banner-img.png"></div>
@@ -123,7 +131,8 @@
                   <div class="row">
                      <div class="col-sm-6">
                         <h1 class="banner_taital">Beauty <br>Kit</h1>
-                        <p class="banner_text">Elevate your beauty effortlessly with our makeup essentials, tailored to bring out your best self in every moment</p>
+                        <p class="banner_text">Elevate your beauty effortlessly with our makeup essentials, tailored to
+                           bring out your best self in every moment</p>
                         <div class="read_bt"><a href="http://localhost:3000/products?category=makeup">Buy Now</a></div>
                      </div>
                      <div class="col-sm-6">
@@ -142,7 +151,8 @@
          <div class="row">
             <div class="col-sm-12">
                <h1 class="product_taital">Best Sellers</h1>
-               <p class="product_text">Elevate your beauty effortlessly with our makeup essentials, tailored to bring out your best self in every moment</p>
+               <p class="product_text">Elevate your beauty effortlessly with our makeup essentials, tailored to bring
+                  out your best self in every moment</p>
             </div>
          </div>
          <div class="product_section_2 layout_padding">
@@ -188,7 +198,12 @@
                <div class="col-md-6">
                   <div class="about_taital_main">
                      <h1 class="about_taital">About Our beauty store</h1>
-                     <p class="about_text">GlamSphere is your go-to hub for all things beauty, offering an expansive array of skincare solutions, makeup essentials, and expert advice. Our platform is designed to inspire and empower individuals to explore and embrace their unique beauty journeys. Whether you're a beauty novice or a seasoned pro, GlamSphere provides curated content and top-quality products to help you express your style with confidence. Join us and elevate your beauty routine to new heights.</p>
+                     <p class="about_text">GlamSphere is your go-to hub for all things beauty, offering an expansive
+                        array of skincare solutions, makeup essentials, and expert advice. Our platform is designed to
+                        inspire and empower individuals to explore and embrace their unique beauty journeys. Whether
+                        you're a beauty novice or a seasoned pro, GlamSphere provides curated content and top-quality
+                        products to help you express your style with confidence. Join us and elevate your beauty routine
+                        to new heights.</p>
                      <!-- <div class="readmore_bt"><a href="#">Read More</a></div> -->
                   </div>
                </div>
@@ -294,7 +309,8 @@
                   </div>
                </div>
                <div class="col-sm-4">
-                  <div class="footer_logo_1"><a href="http://localhost:3000/home"><img src="./images/image.png"></a></div>
+                  <div class="footer_logo_1"><a href="http://localhost:3000/home"><img src="./images/image.png"></a>
+                  </div>
                   <p class="dummy_text">Your go-to hub for all things beauty.</p>
                </div>
                <div class="col-sm-4">
@@ -314,10 +330,12 @@
                   <a href="https://twitter.com/"><i class="fa fa-twitter" aria-hidden="true"></i></a>
                </li>
                <li>
-                  <a href="https://www.youtube.com/@fatimadoesthemakeup"><i class="fa fa-youtube" aria-hidden="true"></i></a>
+                  <a href="https://www.youtube.com/@fatimadoesthemakeup"><i class="fa fa-youtube"
+                        aria-hidden="true"></i></a>
                </li>
                <li>
-                  <a href="https://www.instagram.com/fatimadoesthemakeup/"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                  <a href="https://www.instagram.com/fatimadoesthemakeup/"><i class="fa fa-instagram"
+                        aria-hidden="true"></i></a>
                </li>
             </ul>
          </div>
@@ -354,7 +372,7 @@
       }
    </script>
    <script>
-            document.addEventListener('DOMContentLoaded', function () {
+      document.addEventListener('DOMContentLoaded', function () {
          var usernameInput = document.getElementById('username');
          if (usernameInput) {
             var userID = parseInt(localStorage.getItem("UserID"));
@@ -363,6 +381,17 @@
             }
          }
       });
+
+      document.addEventListener('DOMContentLoaded', function () {
+         var usernameInput = document.getElementById('usernameP');
+         if (usernameInput) {
+            var userID = parseInt(localStorage.getItem("UserID"));
+            if (!isNaN(userID)) {
+               usernameInput.value = userID;
+            }
+         }
+      });
+
       function addcart(product_id) {
          const user_id = parseInt(localStorage.getItem("UserID"));
          if (!user_id || isNaN(user_id)) {
@@ -395,7 +424,7 @@
          }
       }
 
-      
+
    </script>
 </body>
 

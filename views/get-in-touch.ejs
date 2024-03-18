@@ -30,16 +30,20 @@
                 <div class="form-inline ">
                     <div class="login_text">
                         <ul>
-                            <li><a href="http://localhost:3000/profile"><img src="images/user-icon.png"></a></li>
                             <li>
-                                <form id="cartForm" method="POST" action="http://localhost:3000/cart">
-                                    <input type="number" id="username" name="username" style="display: none;">
-                                    <button><img src="images/bag-icon.png"></button>
-                                </form>
+                               <form id="profileForm" method="POST" action="http://localhost:3000/profile">
+                                  <input type="number" id="usernameP" name="username" style="display: none;">
+                                  <button><img src="images/user-icon.png"></button>
+                               </form>
                             </li>
-                        </ul>
+                            <li>
+                               <form id="cartForm" method="POST" action="http://localhost:3000/cart">
+                                  <input type="number" id="username" name="username" style="display: none;">
+                                  <button><img src="images/bag-icon.png"></button>
+                               </form>
+                            </li>
+                         </ul>
                     </div>
-                    </form>
             </nav>
         </div>
     </div>
@@ -143,7 +147,28 @@
     </div>
     <!-- copyright section end -->
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var usernameInput = document.getElementById('username');
+            if (usernameInput) {
+                var userID = parseInt(localStorage.getItem("UserID"));
+                if (!isNaN(userID)) {
+                    usernameInput.value = userID;
+                }
+            }
+        });
 
+        document.addEventListener('DOMContentLoaded', function () {
+            var usernameInput = document.getElementById('usernameP');
+            if (usernameInput) {
+                var userID = parseInt(localStorage.getItem("UserID"));
+                if (!isNaN(userID)) {
+                    usernameInput.value = userID;
+                }
+            }
+        });
+
+    </script>
 </body>
 
 </html>

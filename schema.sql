@@ -177,20 +177,3 @@ SELECT * FROM Orders;
 SELECT * FROM OrderDetail;
 SELECT * FROM ProductReviews;
 SELECT * FROM Cart;
-
-delete from orders where orderid > 2;
-
-
-UPDATE USERS
-SET PASSWORDHASH= "$2b$10$HJD61LM5jmS6ZU83ZPCX5.f2/KhxEs3BsACJdKVOLkSM48OIQ4316"
-WHERE USERID = 5;
-
-
-show tables;
-
-DELETE FROM PRODUCTS WHERE PRODUCTID > 5;
-
-
-
-
-

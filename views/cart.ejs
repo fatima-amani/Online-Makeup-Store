@@ -58,7 +58,12 @@
             <div class="form-inline ">
                <div class="login_text">
                   <ul>
-                     <li><a href="http://localhost:3000/profile"><img src="images/user-icon.png"></a></li>
+                     <li>
+                        <form id="profileForm" method="POST" action="http://localhost:3000/profile">
+                           <input type="number" id="usernameP" name="username" style="display: none;">
+                           <button><img src="images/user-icon.png"></button>
+                        </form>
+                     </li>
                      <li>
                         <form id="cartForm" method="POST" action="http://localhost:3000/cart">
                            <input type="number" id="username" name="username" style="display: none;">
@@ -67,7 +72,6 @@
                      </li>
                   </ul>
                </div>
-               </form>
          </nav>
       </div>
    </div>
@@ -78,7 +82,7 @@
       <div class="container">
          <h2>Your Shopping Cart</h2>
          <% if (cartItems.length==0) { %>
-            <h2>NO ITEMS IN CART !! Shop here <a href="http://localhost:3000/products">here</a></h2>
+            <h2>NO ITEMS IN CART !! Shop <a href="http://localhost:3000/products">here</a></h2>
             <% } else { %>
                <table class="cart-table">
                   <thead>
@@ -93,9 +97,10 @@
                         <% for (let item of cartItems) { %>
                            <td>
                               <div class="cart-info">
-                                 <a href="http://localhost:3000/products/<%= item.productid %>"><img class="cart-image" src="<%= item.imagePath %>"></a>
+                                 <a href="http://localhost:3000/products/<%= item.productid %>"><img class="cart-image"
+                                       src="<%= item.imagePath %>"></a>
                                  <div class="cart-details">
-                                    <a href="http://localhost:3000/products/<%= product.productid %>">
+                                    <a href="http://localhost:3000/products/<%= item.productid %>">
                                        <p class="cart-title">
                                           <%= item.PName %>
                                        </p>
@@ -119,12 +124,13 @@
 
                   </tbody>
                </table>
+               <div class="checkout-section">
+                  <div class="btn"><a href="http://localhost:3000/home">Continue Shopping</a></div>
+                  <div class="btn"><button onclick="checkout()">Checkout</button></div>
+               </div>
                <% } %>
 
-                  <div class="checkout-section">
-                     <div class="btn"><a href="http://localhost:3000/home">Continue Shopping</a></div>
-                     <div class="btn"><button onclick="checkout()">Checkout</button></div>
-                  </div>
+                  
       </div>
    </section>
    <!-- customer section end -->
@@ -223,6 +229,27 @@
       function closeNav() {
          document.getElementById("mySidenav").style.width = "0";
       }
+
+      document.addEventListener('DOMContentLoaded', function () {
+         var usernameInput = document.getElementById('username');
+         if (usernameInput) {
+            var userID = parseInt(localStorage.getItem("UserID"));
+            if (!isNaN(userID)) {
+               usernameInput.value = userID;
+            }
+         }
+      });
+
+      document.addEventListener('DOMContentLoaded', function () {
+         var usernameInput = document.getElementById('usernameP');
+         if (usernameInput) {
+            var userID = parseInt(localStorage.getItem("UserID"));
+            if (!isNaN(userID)) {
+               usernameInput.value = userID;
+            }
+         }
+      });
+
 
 
       function checkout() {
