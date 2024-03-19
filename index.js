@@ -30,7 +30,7 @@ const connection = mysql.createConnection({
   host: "localhost",
   user: "root",
   database: "GlamSphereDB",
-  password: "sql123",
+  password: "root123",
   port: "3306",
 });
 
