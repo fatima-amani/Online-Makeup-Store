@@ -60,13 +60,13 @@
                      <li>
                         <form id="profileForm" method="POST" action="http://localhost:3000/profile">
                            <input type="number" id="usernameP" name="username" style="display: none;">
-                           <button><img src="images/user-icon.png"></button>
+                           <button class="user-img"><img src="images/user-icon.png"></button>
                         </form>
                      </li>
                      <li>
                         <form id="cartForm" method="POST" action="http://localhost:3000/cart">
                            <input type="number" id="username" name="username" style="display: none;">
-                           <button><img src="images/bag-icon.png"></button>
+                           <button class="bag-icon"><img src="images/bag-icon.png"></button>
                         </form>
                      </li>
                   </ul>
@@ -91,10 +91,10 @@
                   <div class="col-lg-3 col-sm-6">
                      <div class="product_box">
                         <a href="http://localhost:3000/products/<%= product.productid %>">
-                           <h4 class="bursh_text">
+                           <h4 class="product_name">
                               <%=product.pname%>
                            </h4>
-                           <p class="lorem_text">
+                           <p class="product_description">
                               <%=product.category%>
                            </p>
                            <img src="<%= product.imagePath %>" class="image_1">
@@ -103,7 +103,7 @@
                         <div class="btn_main">
                            <div class="buy_bt">
                               <ul>
-                                 <li class="active"><button onclick="addcart(<%= product.productid %>)">Add to
+                                 <li class="active"><button onclick="addcart('<%= product.productid %>')">Add to
                                        Cart</button></li>
                                  <!-- <li><a href="#">Buy Now</a></li> -->
                               </ul>

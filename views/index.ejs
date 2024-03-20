@@ -4,6 +4,7 @@
 <head>
    <!-- basic -->
    <meta charset="utf-8">
+
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1">
    <!-- mobile metas -->
@@ -61,13 +62,13 @@
                      <li>
                         <form id="profileForm" method="POST" action="http://localhost:3000/profile">
                            <input type="number" id="usernameP" name="username" style="display: none;">
-                           <button><img src="images/user-icon.png"></button>
+                           <button class="user-img"><img src="images/user-icon.png"></button>
                         </form>
                      </li>
                      <li>
                         <form id="cartForm" method="POST" action="http://localhost:3000/cart">
                            <input type="number" id="username" name="username" style="display: none;">
-                           <button><img src="images/bag-icon.png"></button>
+                           <button class="bag-icon"><img src="images/bag-icon.png"></button>
                         </form>
                      </li>
                   </ul>
@@ -172,7 +173,7 @@
                         <div class="btn_main">
                            <div class="buy_bt">
                               <ul>
-                                 <li class="active"><button onclick="addcart(<%= product.productid %>)">Add to
+                                 <li class="active"><button onclick="addcart('<%= product.productid %>')">Add to
                                        Cart</button></li>
                                  <!-- <li><a href="#">Buy Now</a></li> -->
                               </ul>
@@ -230,7 +231,7 @@
                      <div class="client_section_2">
                         <div class="client_main">
                            <div class="client_left">
-                              <div class="client_img"><img src="<%= item.imagePath %>"></div>
+                              <div class="client_img"><img src="<%= item.imagePath %>" ></div>
                            </div>
                            <div class="client_right">
                               <h3 class="name_text" style="text-transform: uppercase;">

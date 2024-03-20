@@ -61,13 +61,13 @@
                      <li>
                         <form id="profileForm" method="POST" action="http://localhost:3000/profile">
                            <input type="number" id="usernameP" name="username" style="display: none;">
-                           <button><img src="images/user-icon.png"></button>
+                           <button class="user-img"><img src="images/user-icon.png"></button>
                         </form>
                      </li>
                      <li>
                         <form id="cartForm" method="POST" action="http://localhost:3000/cart">
                            <input type="number" id="username" name="username" style="display: none;">
-                           <button><img src="images/bag-icon.png"></button>
+                           <button class="bag-icon"><img src="images/bag-icon.png"></button>
                         </form>
                      </li>
                   </ul>
@@ -94,7 +94,8 @@
                   </thead>
                   <tbody>
                      <tr>
-                        <% for (let item of cartItems) { %>
+                     <% for (let item of cartItems) { %>
+                        <tr>
                            <td>
                               <div class="cart-info">
                                  <a href="http://localhost:3000/products/<%= item.productid %>"><img class="cart-image"
@@ -119,10 +120,18 @@
                               <%= item.Price * item.quantity %>
                            </td>
                            <% } %>
+                     
 
                      </tr>
-
+                  </tr>
                   </tbody>
+                  <tfoot class="lastline">
+                     <tr>
+                         <td >Total</td>
+                         <td id="total_items">4</td>
+                         <td id="total"> 0.00</td>
+                     </tr>
+                 </tfoot>
                </table>
                <div class="checkout-section">
                   <div class="btn"><a href="http://localhost:3000/home">Continue Shopping</a></div>
