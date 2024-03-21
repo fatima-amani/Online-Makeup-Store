@@ -1,5 +1,7 @@
 require("dotenv").config();
 
+// implement delete from cart
+
 const express = require("express");
 const app = express();
 const port = 3000;
