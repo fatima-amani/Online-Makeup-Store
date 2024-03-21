@@ -231,7 +231,7 @@
                      <div class="client_section_2">
                         <div class="client_main">
                            <div class="client_left">
-                              <div class="client_img"><img src="<%= item.imagePath %>" ></div>
+                              <div class="client_img"><img src="<%= item.imagePath %>"></div>
                            </div>
                            <div class="client_right">
                               <h3 class="name_text" style="text-transform: uppercase;">
@@ -364,6 +364,13 @@
    <script src="https:cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
    <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
    <script>
+
+      const params = new URLSearchParams(window.location.search);
+      const alertMessage = params.get('alert');
+      if (alertMessage) {
+         alert(decodeURIComponent(alertMessage));
+      }
+
       function openNav() {
          document.getElementById("mySidenav").style.width = "100%";
       }
@@ -412,6 +419,9 @@
                .then(response => {
                   if (!response.ok) {
                      throw new Error('Internal Server Error');
+                  }
+                  if (response.status === 200) {
+                     alert('added to cart');
                   }
                   return response.json();
                })

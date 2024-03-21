@@ -14,9 +14,6 @@ const Razorpay = require("razorpay");
 const crypto = require("crypto");
 // const { default: items } = require("razorpay/dist/types/items");
 
-
-
-
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
@@ -27,12 +24,11 @@ app.use(express.urlencoded({ extended: true }));
 const mysql = require("mysql2");
 const { error } = require("console");
 
-
 const connection = mysql.createConnection({
   host: "localhost",
   user: "root",
   database: "GlamSphereDB",
-  password: "root123",  // darshana --> root123   fatima-->sql123
+  password: "sql123", // darshana --> root123   fatima-->sql123
   port: "3306",
 });
 
@@ -50,7 +46,7 @@ app.get("/home", (req, res) => {
       console.log(errReviews);
       res.send("some error in Database");
     } else {
-      console.log(resultReviews);
+      // console.log(resultReviews);
       let queryProducts =
         "SELECT productid, pname, price, category, quantityAvailable, imagePath FROM products ORDER BY quantityAvailable DESC LIMIT 4;";
       connection.query(queryProducts, (errProducts, resultProducts) => {
@@ -105,7 +101,7 @@ app.get("/products/:id", (req, res) => {
         console.log(errProd);
         res.redirect("/products");
       } else {
-        console.log(resProd[0]);
+        // console.log(resProd[0]);
         res.render("viewProduct.ejs", { item: resProd[0] });
       }
     });
@@ -122,13 +118,29 @@ app.post("/cart", (req, res) => {
   let query =
     "SELECT c.CartItemID, c.ProductID, c.UserID, p.PName, p.Price,p.imagePath, c.quantity FROM Cart c,Products p where c.productid = p.productid and c.userid=?;";
   try {
-    connection.query(query, [userid], (errCart, resultCart) => {
+    connection.query(query, [parseInt(userid)], (errCart, resultCart) => {
       if (errCart) {
         console.log(errCart);
         res.redirect("/login?alert=kindly login to access cart!!");
       } else {
         // console.log(resultCart);
-        res.render("cart.ejs", { cartItems: resultCart });
+
+        // total
+        let totalAmount = 0;
+        resultCart.forEach((item) => {
+          const price = parseInt(item.Price);
+          totalAmount += price * item.quantity;
+        });
+
+        let totalDetail = {
+          total: totalAmount,
+          totalItems: resultCart.length,
+        };
+
+        res.render("cart.ejs", {
+          cartItems: resultCart,
+          totalDetail: totalDetail,
+        });
       }
     });
   } catch (err) {
@@ -140,7 +152,7 @@ app.post("/cart", (req, res) => {
 app.post("/addtocart", (req, res) => {
   // console.log(req.body);
   let query =
-    "SELECT CartItemID, Quantity FROM Cart WHERE ProductID = ? AND UserID = ? ;";
+    "SELECT CartItemID, Quantity FROM Cart WHERE UserID = ? AND ProductID = ?;";
   let details = [req.body.userid, req.body.productid];
   connection.query(query, details, (errItem, resItem) => {
     if (errItem) {
@@ -182,6 +194,7 @@ app.post("/addtocart", (req, res) => {
   });
 });
 
+
 // checkout
 app.get("/checkout", (req, res) => {
   // console.log("you have enetered checkout section");
@@ -222,7 +235,6 @@ app.get("/checkout", (req, res) => {
                   .status(500)
                   .json({ success: false, message: "Error in placing Order" });
               } else {
-                
                 let receiptNum = resOrderNum[0].OrderID;
                 let RpOrder = {
                   amount: (totalAmount * 100).toString(),
@@ -235,7 +247,7 @@ app.get("/checkout", (req, res) => {
 
                 razorpayInstance.orders.create(RpOrder, (err, order) => {
                   if (!err) {
-                    createOrderDetail(user,receiptNum,resCart);
+                    createOrderDetail(user, receiptNum, resCart);
                     clearCart(user);
                     // console.log(order);
                     return res.status(200).json({
@@ -259,24 +271,28 @@ app.get("/checkout", (req, res) => {
   });
 });
 
-function createOrderDetail(user,orderID,cart) {
-  console.log('cart is: ',cart);
-  console.log(orderID);
+function createOrderDetail(user, orderID, cart) {
+  // console.log("cart is: ", cart);
+  // console.log(orderID);
   // INSERT INTO OrderDetail (OrderID, ProductID, Quantity, Subtotal)
-  query = "INSERT INTO OrderDetail (OrderID, ProductID, Quantity, Subtotal) VALUES(?, ?,?,?);";
-  for(item of cart) {
-    details = [parseInt(orderID), item.ProductID, item.Quantity, (parseFloat(item.Price)*item.Quantity)];
-    console.log(details);
-    connection.query(query,details, (err,res) => {
-      if(err) {
-        console.log("error in entering Order Details: ",err);
-      }
-      else{
+  query =
+    "INSERT INTO OrderDetail (OrderID, ProductID, Quantity, Subtotal) VALUES(?, ?,?,?);";
+  for (item of cart) {
+    details = [
+      parseInt(orderID),
+      item.ProductID,
+      item.Quantity,
+      parseFloat(item.Price) * item.Quantity,
+    ];
+    // console.log(details);
+    connection.query(query, details, (err, res) => {
+      if (err) {
+        console.log("error in entering Order Details: ", err);
+      } else {
         console.log("success in entering order details");
       }
     });
   }
-
 }
 
 // payment gateway routes
@@ -476,26 +492,28 @@ app.get("/contact", (req, res) => {
   res.render("contact.ejs");
 });
 
-app.get("/getintouch", (req, res) => {
-  res.render("get-in-touch.ejs");
+app.get("/feedback", (req, res) => {
+  res.render("feedback.ejs");
 });
 
-app.post("/getintouch/post", (req, res) => {
+app.post("/feedback/post", (req, res) => {
   // console.log(req.body);
   let reviewPost = req.body;
-  let query = `SELECT * FROM USERS WHERE emailid = ? ;`;
+  let query =
+    "INSERT INTO StoreReviews (RName, EmailID, Content) VALUES (?,?,?); ";
+  let review = [req.body.name, req.body.email, req.body.message];
   try {
-    connection.query(query, [reviewPost.email], (err, results) => {
+    connection.query(query, review, (err, results) => {
       if (err) {
         console.log(err);
         res.send("Some errors happened please try again");
       } else {
-        // console.log(results);
+        res.redirect("/home?alert=review posted successfully");
       }
     });
   } catch (err) {
     console.log(err);
-    res.redirect("/getintouch");
+    res.redirect("/feedback");
   }
 });
 

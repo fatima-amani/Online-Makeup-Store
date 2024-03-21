@@ -256,6 +256,9 @@
                   if (!response.ok) {
                      throw new Error('Internal Server Error');
                   }
+                  if (response.status === 200) {
+                     alert('added to cart');
+                  }
                   return response.json();
                })
                .then(data => {

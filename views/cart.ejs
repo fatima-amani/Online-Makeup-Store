@@ -94,44 +94,48 @@
                   </thead>
                   <tbody>
                      <tr>
-                     <% for (let item of cartItems) { %>
-                        <tr>
-                           <td>
-                              <div class="cart-info">
-                                 <a href="http://localhost:3000/products/<%= item.productid %>"><img class="cart-image"
-                                       src="<%= item.imagePath %>"></a>
-                                 <div class="cart-details">
-                                    <a href="http://localhost:3000/products/<%= item.productid %>">
-                                       <p class="cart-title">
-                                          <%= item.PName %>
-                                       </p>
-                                    </a>
-                                    <span class="cart-price">
-                                       <%= item.Price %>
-                                    </span>
-                                    <!-- <a href="#" class="cart-remove">Remove</a> -->
-                                 </div>
+                        <% for (let item of cartItems) { %>
+                     <tr>
+                        <td>
+                           <div class="cart-info">
+                              <a href="http://localhost:3000/products/<%= item.productid %>"><img class="cart-image"
+                                    src="<%= item.imagePath %>"></a>
+                              <div class="cart-details">
+                                 <a href="http://localhost:3000/products/<%= item.productid %>">
+                                    <p class="cart-title">
+                                       <%= item.PName %>
+                                    </p>
+                                 </a>
+                                 <span class="cart-price">
+                                    <%= item.Price %>
+                                 </span>
+
                               </div>
-                           </td>
-                           <td>
-                              <%= item.quantity %>
-                           </td>
-                           <td>
-                              <%= item.Price * item.quantity %>
-                           </td>
-                           <% } %>
-                     
+                           </div>
+                        </td>
+                        <td>
+                           <%= item.quantity %>
+                        </td>
+                        <td>
+                           <%= item.Price * item.quantity %>
+                        </td>
+                        <% } %>
+
 
                      </tr>
-                  </tr>
+                     </tr>
                   </tbody>
                   <tfoot class="lastline">
                      <tr>
-                         <td >Total</td>
-                         <td id="total_items">4</td>
-                         <td id="total"> 0.00</td>
+                        <td>Total</td>
+                        <td id="total_items">
+                           <%= totalDetail.totalItems %>
+                        </td>
+                        <td id="total">
+                           <%= totalDetail.total %>
+                        </td>
                      </tr>
-                 </tfoot>
+                  </tfoot>
                </table>
                <div class="checkout-section">
                   <div class="btn"><a href="http://localhost:3000/home">Continue Shopping</a></div>
@@ -139,7 +143,7 @@
                </div>
                <% } %>
 
-                  
+
       </div>
    </section>
    <!-- customer section end -->
@@ -422,6 +426,8 @@
             });
 
       }
+
+
 
    </script>
 </body>
