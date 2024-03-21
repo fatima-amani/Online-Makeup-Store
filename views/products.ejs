@@ -90,7 +90,8 @@
                <% products.forEach((product, index)=> { %>
                   <div class="col-lg-3 col-sm-6">
                      <div class="product_box">
-                        <a href="http://localhost:3000/products/<%= product.productid %>">
+                        http://localhost:3000/products/view?id=1
+                        <a href="http://localhost:3000/products/view?id=<%= product.productid %>">
                            <h4 class="product_name">
                               <%=product.pname%>
                            </h4>

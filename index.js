@@ -92,8 +92,9 @@ app.get("/products", (req, res) => {
   );
 });
 
-app.get("/products/:id", (req, res) => {
-  const pid = req.params.id;
+app.get("/products/view", (req, res) => {
+  const pid = req.query.id;
+  // console.log(pid);
   let query = "SELECT * FROM Products WHERE ProductID = ?; ";
   try {
     connection.query(query, [pid], (errProd, resProd) => {

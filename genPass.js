@@ -10,4 +10,4 @@ const generatePass = async (pass) => {
 }
 
 // Example usage:
-generatePass('vansh1234');
+generatePass('darshana1234');
