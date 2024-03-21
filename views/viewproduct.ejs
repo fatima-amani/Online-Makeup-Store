@@ -10,7 +10,7 @@
    <meta name="viewport" content="width=device-width, initial-scale=1">
    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
    <!-- site metas -->
-   <title>Products</title>
+   <title>Glam-Sphere</title>
    <meta name="keywords" content="">
    <meta name="description" content="">
    <meta name="author" content="">
@@ -35,7 +35,7 @@
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css"
       media="screen">
    <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
-   <link rel="stylesheet" href="products.css">
+   <link href="../public/css/products.css"/>
 </head>
 
 
@@ -62,30 +62,29 @@
                      <li>
                         <form id="profileForm" method="POST" action="http://localhost:3000/profile">
                            <input type="number" id="usernameP" name="username" style="display: none;">
-                           <button><img src="images/user-icon.png"></button>
+                           <button class="user-img"><img src="images/user-icon.png"></button>
                         </form>
                      </li>
                      <li>
                         <form id="cartForm" method="POST" action="http://localhost:3000/cart">
                            <input type="number" id="username" name="username" style="display: none;">
-                           <button><img src="images/bag-icon.png"></button>
+                           <button class="bag-icon"><img src="images/bag-icon.png"></button>
                         </form>
                      </li>
                   </ul>
                </div>
-
          </nav>
       </div>
    </div>
    <!-- header section end -->
 
    <!-- product section start -->
-   <article class="product-container">
-      <figure class="product-image">
+   <article class="single-product-container">
+      <figure class="single-product-image">
          <img src="<%= item.imagePath %>">
          <span class="zoom-overlay"></span>
       </figure>
-      <div class="product-info">
+      <div class="single-product-info">
          <p id="Category" style="margin: 20px 0 20px 0;">
             <%= item.Category %>
          </p>
@@ -96,7 +95,7 @@
          </h2>
 
 
-         <button aria-label="Add to Cart" onclick="addcart(<%= item.productid %>)">Add to Cart</button>
+         <button aria-label="Add to Cart" onclick="addcart('<%= item.productid %>')">Add to Cart</button>
          <p id="Brand">
             <%= item.Brand %>
          </p>

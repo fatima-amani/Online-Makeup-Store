@@ -32,7 +32,7 @@ const connection = mysql.createConnection({
   host: "localhost",
   user: "root",
   database: "GlamSphereDB",
-  password: "sql123",
+  password: "root123",  // darshana --> root123   fatima-->sql123
   port: "3306",
 });
 
@@ -50,7 +50,7 @@ app.get("/home", (req, res) => {
       console.log(errReviews);
       res.send("some error in Database");
     } else {
-      // console.log(resultReviews);
+      console.log(resultReviews);
       let queryProducts =
         "SELECT productid, pname, price, category, quantityAvailable, imagePath FROM products ORDER BY quantityAvailable DESC LIMIT 4;";
       connection.query(queryProducts, (errProducts, resultProducts) => {
