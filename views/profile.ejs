@@ -77,43 +77,50 @@
     </div>
     <!-- header section end -->
 
-<div class="profile_section">
+    <div class="profile_section">
         <div class="profile-picture">
             <% if (user.imagePath !==null) { %>
-            <img src="<%= user.imagePath %>" alt="this is demo image">
-            <% } else { %>
-            <img src="" alt="random user">
-            <% } %>
+                <img src="<%= user.imagePath %>" alt="this is demo image">
+                <% } else { %>
+                    <img src="\images\userAlt.jpg" alt="user image">
+                    <% } %>
         </div>
         <div class="profile-details">
             <div class="profile-name">
-                <h2><%= user.FirstName +" "+ user.LastName %></h2>
+                <h2>
+                    <%= user.FirstName +" "+ user.LastName %></h2>
             </div>
-            <div class="user_info">
-                <div class="profile-description">
-                    <h5>First Name: <%= user.FirstName  %> </h5>
-                    <h5>Last Name: <%= user.LastName %></h5>
-                    <h5>Email ID: <%= user.EmailID %></h5>
-                    <h5>Username: <%= user.Username %></h5>
-                    <h5>Phone: <%= user.Phone %></h5>
-                    <h5>User Address: <%= user.UserAddress %></h5>
-                </div>
-                <div class="actions">
-                    <% if (user.UserRole == 'ADMIN')  { %>
-                    <h5><a href="/profile/admin"></a></h5>
-                    <br> 
-                    <% } %>
-                    <ul>
-                        <br>
-                        <li><button onclick="logout()">Logout</button></li>
-                        
-                    </ul>
-                </div>
-                
+            <div class=" user_info">
+                        <div class="profile-description">
+                            <h5>First Name: <%= user.FirstName %>
+                            </h5>
+                            <h5>Last Name: <%= user.LastName %>
+                            </h5>
+                            <h5>Email ID: <%= user.EmailID %>
+                            </h5>
+                            <h5>Username: <%= user.Username %>
+                            </h5>
+                            <h5>Phone: <%= user.Phone %>
+                            </h5>
+                            <h5>User Address: <%= user.UserAddress %>
+                            </h5>
+                        </div>
+                        <div class="actions">
+                            <% if (user.UserRole=='ADMIN' ) { %>
+                                <h5><a href="/profile/admin"></a></h5>
+                                <br>
+                                <% } %>
+                                    <ul>
+                                        <br>
+                                        <li><button onclick="logout()">Logout</button></li>
+
+                                    </ul>
+                        </div>
+
             </div>
         </div>
-</div>
-    
+    </div>
+
 
     <!-- footer section start -->
     <div class="footer_section layout_padding">
@@ -134,8 +141,8 @@
                                 </li>
                                 <li>
                                     <a href="tel:9470806786">
-                                        <i class="fa fa-phone" aria-hidden="true"></i><span
-                                            class="padding_left10">Call :
+                                        <i class="fa fa-phone" aria-hidden="true"></i><span class="padding_left10">Call
+                                            :
                                             9844420212, 9470806786</span>
                                     </a>
                                 </li>
@@ -150,83 +157,88 @@
                         </div>
                     </div>
                     <div class="col-sm-4">
-                        <div class="footer_logo_1"><a href="http://localhost:3000/home"><img
-                                    src="./images/image.png
+                        <div class="footer_logo_1"><a href="http://localhost:3000/home"><img src="./images/image.png
                                     "></a></div>
-                                    <p class="dummy_text">Your go-to hub for all things beauty.</p>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="main">
-                                        <h3 class="address_text">Best Products</h3>
-                                        <p class="ipsum_text">Sunscreen <br>Lipsticks <br>Lip Balm <br> Eye
-                                            Shadow </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="social_icon">
-                            <ul>
-                                <li>
-                                    <a href="https://www.facebook.com/"><i class="fa fa-facebook"
-                                            aria-hidden="true"></i></a>
-                                </li>
-                                <li>
-                                    <a href="https://twitter.com/"><i class="fa fa-twitter"
-                                            aria-hidden="true"></i></a>
-                                </li>
-                                <li>
-                                    <a href="https://www.youtube.com/@fatimadoesthemakeup"><i
-                                            class="fa fa-youtube" aria-hidden="true"></i></a>
-                                </li>
-                                <li>
-                                    <a href="https://www.instagram.com/fatimadoesthemakeup/"><i
-                                            class="fa fa-instagram" aria-hidden="true"></i></a>
-                                </li>
-                            </ul>
+                        <p class="dummy_text">Your go-to hub for all things beauty.</p>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="main">
+                            <h3 class="address_text">Best Products</h3>
+                            <p class="ipsum_text">Sunscreen <br>Lipsticks <br>Lip Balm <br> Eye
+                                Shadow </p>
                         </div>
                     </div>
                 </div>
-                <!-- footer section end -->
-                <!-- copyright section start -->
-                <div class="copyright_section">
-                    <div class="container">
-                        <p class="copyright_text">&#169; 2024 All Rights Reserved. <a
-                                href="https://html.design"></a></p>
-                    </div>
-                </div>
-                <!-- copyright section end -->
-            
-                <script>
-                    function logout() {
-                        localStorage.clear();
-                        alert("You have been logged out successfully !!!");
-                        setTimeout(function () {
-                            window.location.href = "http://localhost:3000/home";
-                        }, 3000);
-                    }
-                </script>
-                <script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                        var usernameInput = document.getElementById('username');
-                        if (usernameInput) {
-                            var userID = parseInt(localStorage.getItem("UserID"));
-                            if (!isNaN(userID)) {
-                                usernameInput.value = userID;
-                            }
-                        }
-                    });
-            
-                    document.addEventListener('DOMContentLoaded', function () {
-                        var usernameInput = document.getElementById('usernameP');
-                        if (usernameInput) {
-                            var userID = parseInt(localStorage.getItem("UserID"));
-                            if (!isNaN(userID)) {
-                                usernameInput.value = userID;
-                            }
-                        }
-                    });
-                </script>
-            </body>
-            
-            </html>
-            
+            </div>
+            <div class="social_icon">
+                <ul>
+                    <li>
+                        <a href="https://www.facebook.com/"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                    </li>
+                    <li>
+                        <a href="https://twitter.com/"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                    </li>
+                    <li>
+                        <a href="https://www.youtube.com/@fatimadoesthemakeup"><i class="fa fa-youtube"
+                                aria-hidden="true"></i></a>
+                    </li>
+                    <li>
+                        <a href="https://www.instagram.com/fatimadoesthemakeup/"><i class="fa fa-instagram"
+                                aria-hidden="true"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- footer section end -->
+    <!-- copyright section start -->
+    <div class="copyright_section">
+        <div class="container">
+            <p class="copyright_text">&#169; 2024 All Rights Reserved. <a href="https://html.design"></a></p>
+        </div>
+    </div>
+    <!-- copyright section end -->
+
+    <script>
+        function logout() {
+            localStorage.clear();
+            alert("You have been logged out successfully !!!");
+            setTimeout(function () {
+                window.location.href = "http://localhost:3000/home";
+            }, 2000);
+        }
+
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "100%";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var usernameInput = document.getElementById('username');
+            if (usernameInput) {
+                var userID = parseInt(localStorage.getItem("UserID"));
+                if (!isNaN(userID)) {
+                    usernameInput.value = userID;
+                }
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var usernameInput = document.getElementById('usernameP');
+            if (usernameInput) {
+                var userID = parseInt(localStorage.getItem("UserID"));
+                if (!isNaN(userID)) {
+                    usernameInput.value = userID;
+                }
+            }
+        });
+
+
+    </script>
+</body>
+
+</html>

@@ -231,7 +231,14 @@
                      <div class="client_section_2">
                         <div class="client_main">
                            <div class="client_left">
-                              <div class="client_img"><img src="<%= item.imagePath %>"></div>
+
+                              <div class="client_img">
+                                 <% if (item.imagePath) { %>
+                                    <img src="<%= item.imagePath %>">
+                                    <% } else { %>
+                                       <img src="\images\userAlt.jpg" alt="user image">
+                                       <% } %>
+                              </div>
                            </div>
                            <div class="client_right">
                               <h3 class="name_text" style="text-transform: uppercase;">

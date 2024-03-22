@@ -397,7 +397,7 @@ app.post("/user/signup", async (req, res) => {
           "/signup?alert=" + encodeURIComponent(errSignup.sqlMessage)
         );
       } else {
-        res.redirect("/home");
+        res.redirect("/login?alert=You have succesfully signed up, login to continue.");
       }
     });
   } catch (err) {
