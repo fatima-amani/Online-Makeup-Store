@@ -28,7 +28,7 @@ const connection = mysql.createConnection({
   host: "localhost",
   user: "root",
   database: "GlamSphereDB",
-  password: "sql123", // darshana --> root123   fatima-->sql123
+  password: "root123", // darshana --> root123   fatima-->sql123
   port: "3306",
 });
 
