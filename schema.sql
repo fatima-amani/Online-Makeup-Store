@@ -7,8 +7,6 @@ CREATE TABLE Products (
     ProductID SERIAL PRIMARY KEY,
     PName VARCHAR(255),
     Brand VARCHAR(255),
-    Manufacturer VARCHAR(255),
-    CountryOfOrigin VARCHAR(255),
     PDescription TEXT,
     Price DECIMAL(10, 2),
     QuantityAvailable INT,
@@ -28,16 +26,6 @@ CREATE TABLE Users (
     UserRole ENUM('CUSTOMER', 'ADMIN'),
     UserAddress VARCHAR(255),
     imagePath VARCHAR(255)
-);
-
--- ADD PATH TO INSERT
--- SET imagePath = '/images/fatima.png';
-
-
-CREATE TABLE Shades (
-    ShadeID SERIAL PRIMARY KEY,
-    ProductID INTEGER REFERENCES Products(ProductID) ON DELETE CASCADE,
-    ShadeName VARCHAR(255)
 );
 
 CREATE TABLE Orders (
@@ -114,23 +102,6 @@ VALUES
 ('Apeksha', 'Ankola', 'apeksha@gmail.com','apeksha', '$10$HJD61LM5jmS6ZU83ZPCX5.f2/KhxEs3BsACJdKVOLkSM48OIQ4316', '9999966666', 'CUSTOMER', 'Vijayanagar');
 
 
-INSERT INTO Shades (ProductID, ShadeName)
-VALUES
-(1, 'BOMBAE'),
-(1, 'MADRAAS KAPI'),
-(1, 'JHANVI'),
-(2, 'PINKLITE'),
-(2, 'GOLDLITE'),
-(2, 'PEACHLITE'),
-(3, 'COOL IVORY'),
-(3, 'NEUTRAL FAIR'),
-(3, 'LIGHT BEIGE'),
-(3, 'MEDIUM NEUTRAL'),
-(3, 'TAN WARM'),
-(4, 'FAIR'),
-(4, 'MEDIUM'),
-(4, 'LIGHT');
-
 INSERT INTO Orders (UserID, OrderDate, OrderAmount, OrderStatus)
 VALUES
 (4, '2024-02-14', 5900, 'PLACED'),
@@ -170,7 +141,6 @@ VALUES
 
 SELECT * FROM Products;
 SELECT * FROM Users;
-SELECT * FROM Shades;
 SELECT * FROM Orders;
 SELECT * FROM OrderDetail;
 SELECT * FROM StoreReviews;

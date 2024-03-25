@@ -128,14 +128,17 @@ app.post("/cart", (req, res) => {
 
         // total
         let totalAmount = 0;
+        let totalItem = 0;
         resultCart.forEach((item) => {
           const price = parseInt(item.Price);
           totalAmount += price * item.quantity;
+          totalItem +=item.quantity;
+
         });
 
         let totalDetail = {
           total: totalAmount,
-          totalItems: resultCart.length,
+          totalItems: totalItem,
         };
 
         res.render("cart.ejs", {
