@@ -1,18 +1,16 @@
 require("dotenv").config();
+const credentials = process.env;
 
-// implement delete from cart
 
 const express = require("express");
 const app = express();
 const port = 3000;
 const path = require("path");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 
 // payment gateway
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
-// const { default: items } = require("razorpay/dist/types/items");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -24,18 +22,22 @@ app.use(express.urlencoded({ extended: true }));
 const mysql = require("mysql2");
 const { error } = require("console");
 
+// console.log(credentials.database_password);
+console.log(credentials.key_id);
+
 const connection = mysql.createConnection({
   host: "localhost",
   user: "root",
   database: "GlamSphereDB",
-  password: "sql123", // darshana --> root123   fatima-->sql123
+  password: "sql123",
   port: "3306",
 });
 
 // Payment gateway credentials
+
 const razorpayInstance = new Razorpay({
-  key_id: "rzp_test_ztvlLbwUAdGqVu",
-  key_secret: "5IjfLUpFShSzIUN0rSEq6q2V",
+  key_id: credentials.key_id,
+  key_secret: credentials.key_secret,
 });
 
 app.get("/home", (req, res) => {
