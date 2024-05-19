@@ -22,14 +22,12 @@ app.use(express.urlencoded({ extended: true }));
 const mysql = require("mysql2");
 const { error } = require("console");
 
-// console.log(credentials.database_password);
-console.log(credentials.key_id);
 
 const connection = mysql.createConnection({
   host: "localhost",
   user: "root",
   database: "GlamSphereDB",
-  password: "sql123",
+  password: credentials.database_password,
   port: "3306",
 });
 
