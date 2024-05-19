@@ -27,11 +27,7 @@ const connection = mysql.createConnection({
   host: "localhost",
   user: "root",
   database: "GlamSphereDB",
-<<<<<<< HEAD
   password: credentials.database_password,
-=======
-  password: "root123", // darshana --> root123   fatima-->sql123
->>>>>>> 3ce2b09093d43bb6579bdc94c77c7e3608d2c9b0
   port: "3306",
 });
 
@@ -280,9 +276,6 @@ app.get("/checkout", (req, res) => {
 });
 
 function createOrderDetail(user, orderID, cart) {
-  // console.log("cart is: ", cart);
-  // console.log(orderID);
-  // INSERT INTO OrderDetail (OrderID, ProductID, Quantity, Subtotal)
   query =
     "INSERT INTO OrderDetail (OrderID, ProductID, Quantity, Subtotal) VALUES(?, ?,?,?);";
   for (item of cart) {
@@ -312,7 +305,7 @@ app.post("/verifyOrder", (req, res) => {
   const razorpay_signature = req.headers["x-razorpay-signature"];
 
   // Pass yours key_secret here
-  const key_secret = "5IjfLUpFShSzIUN0rSEq6q2V";
+  const key_secret = credentials.key_secret;
 
   // STEP 8: Verification & Send Response to User
 
