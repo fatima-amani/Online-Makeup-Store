@@ -24,22 +24,18 @@ const { error } = require("console");
 
 
 const connection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  database: "GlamSphereDB",
-<<<<<<< HEAD
-  password: credentials.database_password,
-=======
-  password: "root123", // darshana --> root123   fatima-->sql123
->>>>>>> 3ce2b09093d43bb6579bdc94c77c7e3608d2c9b0
-  port: "3306",
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT,
 });
 
 // Payment gateway credentials
 
 const razorpayInstance = new Razorpay({
-  key_id: credentials.key_id,
-  key_secret: credentials.key_secret,
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
 app.get("/home", (req, res) => {
